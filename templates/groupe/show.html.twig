@@ -1,0 +1,66 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Groupe{% endblock %}
+
+{% block body %}
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-header bg-info">
+                        Groupe {{ groupe.designation }}
+                    </div>
+                    <div class="card-body">
+                        <table class="table">
+                            <thead>
+                            <tr>
+                                <th>#</th>
+                                <th>Telephone</th>
+                                <th>Nom</th>
+                                <th>Postnom</th>
+                                <th>Adresse</th>
+                                <th>Fonction</th>
+                                <th>actions</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            {% set counter = 0 %}
+                            {% for contact in contacts %}
+                                {% set counter = counter + 1 %}
+                                <tr>
+                                    <td>{{ counter }}</td>
+                                    <td>{{ contact.telephone }}</td>
+                                    <td>{{ contact.nom }}</td>
+                                    <td>{{ contact.postnom }}</td>
+                                    <td>{{ contact.adresse }}</td>
+                                    <td>{{ contact.fonction }}</td>
+                                    <td>
+                                        <a href="{{ path('app_contact_show', {'id': contact.id}) }}">show</a>
+                                        <a href="{{ path('app_contact_edit', {'id': contact.id}) }}">edit</a>
+                                    </td>
+                                </tr>
+                            {% else %}
+                                <tr>
+                                    <td colspan="8">no records found</td>
+                                </tr>
+                            {% endfor %}
+                            </tbody>
+                        </table>
+
+                    </div>
+                    <div class="card-footer">
+                            <a href="{{ path('app_groupe_index') }}">Voir la liste</a>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+
+
+{#    <a href="{{ path('app_groupe_edit', {'id': groupe.id}) }}">edit</a>#}
+
+{#    {{ include('groupe/_delete_form.html.twig') }}#}
+{% endblock %}

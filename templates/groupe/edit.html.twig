@@ -1,0 +1,30 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Edit Groupe{% endblock %}
+
+{% block body %}
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-12">
+
+                <div class="card">
+                    <div class="header bg-info">
+                        <h3>Modifier le Groupe</h3>
+                    </div>
+                    <div class="body m-3">
+                        {{ include('groupe/_form.html.twig', {'button_label': 'Update'}) }}
+
+
+                    </div>
+                    <div class="footer">
+                        <a href="{{ path('app_groupe_index') }}">back to list</a>
+
+                        {{ include('groupe/_delete_form.html.twig') }}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+{% endblock %}

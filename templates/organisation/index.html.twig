@@ -1,0 +1,53 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Organisation index{% endblock %}
+
+{% block body %}
+<div class="container-fluid">
+    <div class="row">
+
+        <div class="col-12">
+
+            <table class="table">
+                <thead>
+                <tr>
+                    <th>#</th>
+                    <th>Designation</th>
+                    <th>Rccm</th>
+                    <th>Idnat</th>
+                    <th>Adresse</th>
+                    <th>Expediteur</th>
+                    <th>actions</th>
+                </tr>
+                </thead>
+                <tbody>
+                {% set counter = 0 %}
+                {% for organisation in organisations %}
+                    {% set counter = counter + 1 %}
+
+                    <tr>
+                        <td>{{ organisation.id }}</td>
+                        <td>{{ organisation.designation }}</td>
+                        <td>{{ organisation.rccm }}</td>
+                        <td>{{ organisation.idnat }}</td>
+                        <td>{{ organisation.adresse }}</td>
+                        <td>{{ organisation.expediteur }}</td>
+                        <td>
+                            <a href="{{ path('app_organisation_show', {'id': organisation.id}) }}">show</a>
+                            <a href="{{ path('app_organisation_edit', {'id': organisation.id}) }}">edit</a>
+                        </td>
+                    </tr>
+                {% else %}
+                    <tr>
+                        <td colspan="7">no records found</td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+
+    <a href="{{ path('app_organisation_new') }}">Create new</a>
+{% endblock %}

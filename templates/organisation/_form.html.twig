@@ -1,0 +1,29 @@
+{{ form_start(form) }}
+{#    {{ form_widget(form) }}#}
+    <div class="form-group">
+        <label for="">Type D'Organisation *</label>
+        {{ form_widget(form.type, {'attr': {'class':'form-control'}}) }}
+    </div>
+    <div class="form-group">
+        <label for="">Designation *</label>
+        {{ form_widget(form.designation, {'attr': {'class':'form-control'}}) }}
+    </div>
+    <div class="form-group">
+        <label for="">RCCM *</label>
+        {{ form_widget(form.rccm, {'attr': {'class':'form-control'}}) }}
+    </div>
+    <div class="form-group">
+        <label for="">Identification Nationale *</label>
+        {{ form_widget(form.idnat, {'attr': {'class':'form-control'}}) }}
+    </div>
+    <div class="form-group">
+        <label for="">Adresse *</label>
+        {{ form_widget(form.adresse, {'attr': {'class':'form-control'}}) }}
+    </div>
+    <div class="form-group">
+        <label for="">Expediteur *</label>
+        {{ form_widget(form.expediteur, {'attr': {'class':'form-control'}}) }}
+    </div>
+
+    <button class="btn btn-success">{{ button_label|default('Save') }}</button>
+{{ form_end(form) }}

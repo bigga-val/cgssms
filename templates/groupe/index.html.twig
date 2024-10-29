@@ -1,0 +1,53 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Groupe index{% endblock %}
+
+{% block body %}
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-header bg-info">
+                        <h3>Liste des Groupes de contacts</h3>
+                    </div>
+                    <div class="card-body">
+                        <table class="table">
+                            <thead>
+                            <tr>
+                                <th>#</th>
+                                <th>Designation</th>
+                                <th>Organisation</th>
+                                <th>actions</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            {% for groupe in groupes %}
+                                <tr>
+                                    <td>{{ groupe.id }}</td>
+                                    <td>{{ groupe.designation }}</td>
+                                    <td>{{ groupe.organisation }}</td>
+                                    <td>
+                                        <a href="{{ path('app_groupe_show', {'id': groupe.id}) }}">Details</a>
+                                        <a href="{{ path('app_groupe_edit', {'id': groupe.id}) }}">edit</a>
+                                    </td>
+                                </tr>
+                            {% else %}
+                                <tr>
+                                    <td colspan="4">no records found</td>
+                                </tr>
+                            {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="card-footer">
+                        <a href="{{ path('app_groupe_new') }}">Create new</a>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+
+{% endblock %}

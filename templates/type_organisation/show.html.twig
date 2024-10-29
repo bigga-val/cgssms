@@ -1,0 +1,38 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}TypeOrganisation{% endblock %}
+
+{% block body %}
+    <h1>TypeOrganisation</h1>
+
+    <table class="table">
+        <tbody>
+            <tr>
+                <th>Id</th>
+                <td>{{ type_organisation.id }}</td>
+            </tr>
+            <tr>
+                <th>Nom</th>
+                <td>{{ type_organisation.nom }}</td>
+            </tr>
+            <tr>
+                <th>Active</th>
+                <td>{{ type_organisation.active ? 'Yes' : 'No' }}</td>
+            </tr>
+            <tr>
+                <th>Designation</th>
+                <td>{{ type_organisation.designation }}</td>
+            </tr>
+            <tr>
+                <th>IsActive</th>
+                <td>{{ type_organisation.isActive ? 'Yes' : 'No' }}</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <a href="{{ path('app_type_organisation_index') }}">back to list</a>
+
+    <a href="{{ path('app_type_organisation_edit', {'id': type_organisation.id}) }}">edit</a>
+
+    {{ include('type_organisation/_delete_form.html.twig') }}
+{% endblock %}

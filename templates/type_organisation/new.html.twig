@@ -1,0 +1,11 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}New TypeOrganisation{% endblock %}
+
+{% block body %}
+    <h1>Create new TypeOrganisation</h1>
+
+    {{ include('type_organisation/_form.html.twig') }}
+
+    <a href="{{ path('app_type_organisation_index') }}">back to list</a>
+{% endblock %}

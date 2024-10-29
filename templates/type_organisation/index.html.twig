@@ -1,0 +1,38 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}TypeOrganisation index{% endblock %}
+
+{% block body %}
+    <h1>Types D'organisation</h1>
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th>#</th>
+                <th>Designation</th>
+                <th>actions</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% set counter = 0 %}
+        {% for type_organisation in type_organisations %}
+            {% set counter = counter + 1 %}
+            <tr>
+                <td>{{ counter }}</td>
+                <td>{{ type_organisation.designation }}</td>
+{#                <td>{{ type_organisation.isActive ? 'Yes' : 'No' }}</td>#}
+                <td>
+                    <a href="{{ path('app_type_organisation_show', {'id': type_organisation.id}) }}">show</a>
+                    <a href="{{ path('app_type_organisation_edit', {'id': type_organisation.id}) }}">edit</a>
+                </td>
+            </tr>
+        {% else %}
+            <tr>
+                <td colspan="6">no records found</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+    <a href="{{ path('app_type_organisation_new') }}">Create new</a>
+{% endblock %}

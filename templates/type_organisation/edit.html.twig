@@ -1,0 +1,13 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Edit TypeOrganisation{% endblock %}
+
+{% block body %}
+    <h1>Edit TypeOrganisation</h1>
+
+    {{ include('type_organisation/_form.html.twig', {'button_label': 'Update'}) }}
+
+    <a href="{{ path('app_type_organisation_index') }}">back to list</a>
+
+    {{ include('type_organisation/_delete_form.html.twig') }}
+{% endblock %}
