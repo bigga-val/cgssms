@@ -3,11 +3,14 @@
 namespace App\Controller;
 
 use App\Entity\Groupe;
+use App\Entity\Organisation;
 use App\Form\GroupeType;
 use App\Repository\ContactRepository;
 use App\Repository\GroupeRepository;
+use Couchbase\RegexpSearchQuery;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
@@ -83,5 +86,13 @@ final class GroupeController extends AbstractController
         }
 
         return $this->redirectToRoute('app_groupe_index', [], Response::HTTP_SEE_OTHER);
+    }
+
+
+    #[Route('/JsonListGroupsByOrganisation/{id}', name: 'JsonListGroupsByOrganisation', methods: ['GET'])]
+    public function JsonListGroupsByOrganisation(Request $request, Organisation $organisation): JsonResponse
+    {
+
+        return new JsonResponse(['data'=>$organisation]);
     }
 }

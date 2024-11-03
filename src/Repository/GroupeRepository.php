@@ -31,6 +31,23 @@ class GroupeRepository extends ServiceEntityRepository
         //$query->setParameter('mydate', $mydate->format('Y-m-d'));
         return $query->getResult();
     }
+
+    public function findGroupesByOrganisation($value): array
+    {
+        $em = $this->getEntityManager();
+        $query = $em->createQuery(
+            'select g.id, g.designation, o.designation organisation
+                    from App\Entity\Groupe g, App\Entity\Organisation o 
+                    where g.organisation = o.id
+                    and g.organisation = :organisation
+            '
+        );
+        $query->setParameter('organisation', $value);
+        //$query->setParameter('mydate', $mydate->format('Y-m-d'));
+        return $query->getResult();
+    }
+
+
     //    /**
     //     * @return Groupe[] Returns an array of Groupe objects
     //     */

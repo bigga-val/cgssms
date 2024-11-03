@@ -1,0 +1,95 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Envoyer SMS{% endblock %}
+
+{% block body %}
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-header bg-info">
+                        <h3>Destinataires</h3>
+                    </div>
+                    <div class="card-body">
+                        <div class="form-group">
+                            <label for="organisation">Mes Organisations</label>
+                            <select name="organisation" id="organisation" class="form-control">
+                                <option value="-1">Choisir Une Organisation</option>
+                                {% for organisation in organisations %}
+                                    <option value="{{ organisation.id }}">{{ organisation.designation }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="destinataires">Liste des contacts</label>
+{#                            <input type="text" class="form-control" name="destinataires" placeholder="0991234567">#}
+                            <select name="listes" id="listes" class="form-control"></select>
+                        </div>
+
+
+                    </div>
+                    <div class="card-footer">
+                        <a href="{{ path('app_groupe_new') }}">Create new</a>
+
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-header bg-info">
+                        <h3>Redigez le message</h3>
+                    </div>
+                    <div class="card-body">
+                        <div class="form-group">
+                            <label for="destinataires">Modele</label>
+                            <input type="text" class="form-control" name="destinataires" placeholder="Mes Modeles des SMS">
+                        </div>
+                        <div class="form-group">
+                            <label for="destinataires">Message</label>
+                            <textarea maxlength="155" name="message" id="message" cols="30" rows="5" class="form-control"></textarea>
+                        </div>
+                        <div class="form-group">
+                            <input type="submit" value="Envoyer" class="btn btn-success">
+                        </div>
+                    </div>
+                    <div class="card-footer">
+                        <a href="{{ path('app_groupe_new') }}">Create new</a>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="{{ asset("plugins/jquery/jquery.min.js") }}"></script>
+    <script>
+        $(document).ready(function(){
+            $("#organisation").on('change', function(e){
+                console.log($(this).val())
+                let options = ""
+                $.ajax({
+                    url: `JsonListGroupsByOrganisation/`+$(this).val(),
+                    method: 'GET',
+                    data: {},
+                    success: function (data) {
+                        console.log(data.length)
+                        for(var i = 0; i < data.length; i++){
+                            console.log(data[i])
+                            options += "<option value='"+data[i]['id']+"'>"+data[i]['designation']+"</option>"
+                        }
+                        $("#listes").html(options)
+                        console.log(options)
+                    },
+                    error: function () {
+                        alert('Erreur lors de la requête AJAX.');
+                        // Autres actions à effectuer en cas d'erreur
+                    }
+                    //let qty = $(this).parent("td").siblings("td").children("input[x-model='item.quantity']")
+                })
+            })
+
+        })
+    </script>
+
+{% endblock %}
+
+
+

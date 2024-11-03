@@ -1,0 +1,26 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Templatesms{% endblock %}
+
+{% block body %}
+    <h1>Templatesms</h1>
+
+    <table class="table">
+        <tbody>
+            <tr>
+                <th>Id</th>
+                <td>{{ templatesm.id }}</td>
+            </tr>
+            <tr>
+                <th>Texte</th>
+                <td>{{ templatesm.texte }}</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <a href="{{ path('app_templatesms_index') }}">back to list</a>
+
+    <a href="{{ path('app_templatesms_edit', {'id': templatesm.id}) }}">edit</a>
+
+    {{ include('templatesms/_delete_form.html.twig') }}
+{% endblock %}

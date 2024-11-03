@@ -1,0 +1,11 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}New Templatesms{% endblock %}
+
+{% block body %}
+    <h1>Create new Templatesms</h1>
+
+    {{ include('templatesms/_form.html.twig') }}
+
+    <a href="{{ path('app_templatesms_index') }}">back to list</a>
+{% endblock %}
