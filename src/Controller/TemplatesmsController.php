@@ -30,6 +30,7 @@ final class TemplatesmsController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+            $templatesm->setUser($this->getUser());
             $entityManager->persist($templatesm);
             $entityManager->flush();
 

@@ -6,6 +6,9 @@ use App\Entity\Organisation;
 use App\Repository\ContactRepository;
 use App\Repository\GroupeRepository;
 use App\Repository\OrganisationRepository;
+use App\Repository\TemplatesmsRepository;
+use App\Entity\Templatesms;
+use Doctrine\ORM\EntityManagerInterface;
 use PHPUnit\Framework\Constraint\Count;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -19,7 +22,7 @@ class HomeController extends AbstractController
     #[Route('/', name: 'app_home')]
     public function index(
         ContactRepository $contactRepository,
-        GroupeRepository $groupeRepository,
+        GroupeRepository  $groupeRepository, TemplatesmsRepository $templateRepository,
     ): Response
     {
         if(!$this->getUser()){
@@ -41,19 +44,22 @@ class HomeController extends AbstractController
     public function envoi(Request $request,
                           OrganisationRepository $organisationRepository,
                             GroupeRepository $groupeRepository,
+                            TemplatesmsRepository $templatesmsRepository,
 
     ): Response
     {
         $organisations = $organisationRepository->findBy(["user"=>$this->getUser()]);
         $groupes = $groupeRepository->findBy(["organisation"=>1]);
+        $templates = $templatesmsRepository->findBy(["user"=>$this->getUser()]);
 
         return $this->render("home/envoi.html.twig", [
             'organisations' => $organisations,
+            'templates' => $templates,
         ]);
     }
 
     #[Route('/envoyer', name: 'app_envoyer_sms')]
-    public function envoyer(Request $request)
+    public function envoyer($numero, $message, $sender)
     {
             try {
                 $destinataire = "";
@@ -79,11 +85,11 @@ class HomeController extends AbstractController
 
                 curl_close($curl);
                 //dd("Erreur: ", $err, "Response:", $response);
-                return $this->redirectToRoute('app_home');
+                //return $this->redirectToRoute('app_home');
             } catch (Exception $e) {
 
             }
-        return $this->redirectToRoute('app_home');
+        return $response;
 
     }
     #[Route('/JsonListGroupsByOrganisation/{id}', name: 'JsonListGroupsByOrganisation', methods: ['GET'])]
@@ -96,5 +102,41 @@ class HomeController extends AbstractController
         $groupes = $groupeRepository->findGroupesByOrganisation($request->get("id"));
 
         return new JsonResponse($groupes);
+    }
+
+    #[Route('/JsonSaveTemplate', name: 'JsonSaveTemplate', methods: ['GET'])]
+    public function JsonSaveTemplate(Request $request,
+                                     EntityManagerInterface $entityManager
+    ): JsonResponse
+    {
+        $templatesms = new Templatesms();
+        $templatesms->setUser($this->getUser());
+        $templatesms->setTexte($request->get("texte"));
+        $templatesms->setTitre($request->get("titre"));
+        $entityManager->persist($templatesms);
+        $entityManager->flush();
+        return new JsonResponse([$request->get("titre"), $request->get("texte")]);
+    }
+
+    #[Route('/JsonEnvoyerSMS', name: 'JsonEnvoyerSMS', methods: ['GET'])]
+    public function JsonEnvoyerSMS(Request $request,
+                                     EntityManagerInterface $entityManager,
+                                    ContactRepository $contactRepository,
+
+    ): JsonResponse
+    {
+        $message = $request->get("message");
+        $sender = $request->get("sender");
+        $groupeID = $request->get("groupeID");
+        $contacts = $contactRepository->findBy(['groupe'=>$groupeID]);
+        if(count($contacts)==0){
+            return new JsonResponse("Aucun contact trouve");
+        }else{
+            foreach ($contacts as $contact) {
+                $numero = '%2b'.substr($contact->getTelephone(), -9);
+                $response = $this->envoyer($numero, $message, $sender);
+            }
+        }
+        return new JsonResponse($response);
     }
 }

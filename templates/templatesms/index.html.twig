@@ -7,25 +7,29 @@
     <div class="row">
         <div class="col-12">
             <div class="card">
-                <div class="card-header bg-info">
-                    <h3>Destinataires</h3>
+                <div class="card-header bg-info d-flex justify-content-between">
+                    <h3>Modeles des Messages</h3>
+                    <a class="btn btn-success" href="{{ path('app_templatesms_new') }}">Creer</a>
+
                 </div>
                 <div class="card-body">
                     <table class="table">
                         <thead>
                         <tr>
-                            <th>Id</th>
+                            <th>#</th>
                             <th>Texte</th>
                             <th>actions</th>
                         </tr>
                         </thead>
                         <tbody>
+                        {% set counter = 0 %}
                         {% for templatesm in templatesms %}
+                            {% set counter = counter + 1 %}
                             <tr>
-                                <td>{{ templatesm.id }}</td>
+                                <td>{{ counter }}</td>
                                 <td>{{ templatesm.texte }}</td>
                                 <td>
-                                    <a href="{{ path('app_templatesms_show', {'id': templatesm.id}) }}">show</a>
+{#                                    <a href="{{ path('app_templatesms_show', {'id': templatesm.id}) }}">show</a>#}
                                     <a href="{{ path('app_templatesms_edit', {'id': templatesm.id}) }}">edit</a>
                                 </td>
                             </tr>
@@ -37,7 +41,6 @@
                         </tbody>
                     </table>
 
-                    <a href="{{ path('app_templatesms_new') }}">Create new</a>
                 </div>
             </div>
         </div>

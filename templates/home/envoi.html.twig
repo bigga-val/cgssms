@@ -29,7 +29,7 @@
 
                     </div>
                     <div class="card-footer">
-                        <a href="{{ path('app_groupe_new') }}">Create new</a>
+{#                        <a href="{{ path('app_groupe_new') }}">Create new</a>#}
 
                     </div>
                 </div>
@@ -40,43 +40,79 @@
                     </div>
                     <div class="card-body">
                         <div class="form-group">
-                            <label for="destinataires">Modele</label>
-                            <input type="text" class="form-control" name="destinataires" placeholder="Mes Modeles des SMS">
+                            <label for="template">Modele</label>
+{#                            <input type="text" class="form-control" name="destinataires" placeholder="Mes Modeles des SMS">#}
+                            <select name="template" id="template" class="form-control">
+                                <option value="-1">Choisir votre modele de message</option>
+                                {% for template in templates %}
+                                    <option value="{{ template.texte }}">{{ template.titre }}</option>
+                                {% endfor %}
+                            </select>
                         </div>
                         <div class="form-group">
-                            <label for="destinataires">Message</label>
-                            <textarea maxlength="155" name="message" id="message" cols="30" rows="5" class="form-control"></textarea>
+                            <label for="destinataires">Message
+{#                                <span id="save-model" class="btn btn-sm btn-info d-none">Enregistrer comme modele</span>#}
+                                <button id="save-model" type="button" class="btn btn-sm btn-info d-none" data-toggle="modal" data-target="#modal-default">
+                                    Enregistrer comme modele
+                                </button>
+                            </label>
+                            <textarea maxlength="160" name="message" id="message" cols="30" rows="5" class="form-control"></textarea>
+                            <i><span id="longueur">0</span>  Sur 160 Caracteres</i>
                         </div>
                         <div class="form-group">
-                            <input type="submit" value="Envoyer" class="btn btn-success">
+                            <input type="submit" id="btn-envoyer-sms" value="Envoyer" class="btn btn-success">
                         </div>
                     </div>
                     <div class="card-footer">
-                        <a href="{{ path('app_groupe_new') }}">Create new</a>
+{#                        <a href="{{ path('app_groupe_new') }}">Create new</a>#}
 
                     </div>
                 </div>
             </div>
         </div>
     </div>
+
+
+    <div class="modal fade" id="modal-default">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title">Entrez le titre du Modele de SMS</h4>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <input type="text" class="form-control" id="titre">
+                </div>
+                <div class="modal-footer justify-content-between">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                    <button id="enregistrer-model" type="button"  data-dismiss="modal" class="btn btn-primary">Enregistrer</button>
+                </div>
+            </div>
+            <!-- /.modal-content -->
+        </div>
+        <!-- /.modal-dialog -->
+    </div>
+    <!-- /.modal -->
     <script src="{{ asset("plugins/jquery/jquery.min.js") }}"></script>
     <script>
         $(document).ready(function(){
             $("#organisation").on('change', function(e){
-                console.log($(this).val())
+               // console.log($(this).val())
                 let options = ""
                 $.ajax({
                     url: `JsonListGroupsByOrganisation/`+$(this).val(),
                     method: 'GET',
                     data: {},
                     success: function (data) {
-                        console.log(data.length)
+                        //console.log(data.length)
                         for(var i = 0; i < data.length; i++){
-                            console.log(data[i])
-                            options += "<option value='"+data[i]['id']+"'>"+data[i]['designation']+"</option>"
+                            //console.log(data[i])
+                            options += "<option value='"+data[i]['id']+"'>"+data[i]['designation']+" ("+data[i]['totalContact']+")</option>"
                         }
                         $("#listes").html(options)
-                        console.log(options)
+                        //console.log(options)
                     },
                     error: function () {
                         alert('Erreur lors de la requête AJAX.');
@@ -86,6 +122,75 @@
                 })
             })
 
+            /////
+            $('#template').on("change", function(e){
+                //alert("bien")
+                if($(this).val() == -1){
+                    $("#message").val("")
+                }else{
+                    $("#message").val($(this).val())
+                    $("#longueur").text($("#message").val().length)
+                }
+            })
+
+            $("#message").on("keyup", function(e){
+                //console.log($(this).val().length)
+                $("#longueur").text($(this).val().length)
+                //check if the length of text to hide or display the button
+                if($(this).val().length === 0){
+                    $("#save-model").addClass("d-none")
+                }else{
+                    $("#save-model").removeClass("d-none")
+
+                }
+
+            })
+
+            //to save a message model
+            $("#save-model").on('click', function(e){
+                console.log($('#message').val())
+            })
+
+            //confirm saving of the template
+            $("#enregistrer-model").click(function(e){
+                //console.log($('#message').val(), $('#titre').val())
+                $.ajax({
+                    url: 'JsonSaveTemplate?titre='+
+                        $('#titre').val() + '&texte='+$('#message').val(),
+                    method: 'GET',
+                    data: {},
+                    success: function (data) {
+                        //console.log(data, 'done')
+                        //$('#modal-default').toggle()
+                    },
+                    error: function () {
+                        alert('Erreur lors de la requête AJAX.');
+                        // Autres actions à effectuer en cas d'erreur
+                    }
+                    //let qty = $(this).parent("td").siblings("td").children("input[x-model='item.quantity']")
+                })
+            })
+
+            $("#btn-envoyer-sms").on("click", function(e){
+                let message = $("#btn-envoyer-sms").val()
+                let listID = $("#listes").val()
+                let sender = $("#organisation").val()
+
+                $.ajax({
+                    url: 'JsonEnvoyerSMS?sender='+sender+'&message='+message+'&groupeID='+listID,
+                    method: 'GET',
+                    data: {},
+                    success: function (data) {
+                        console.log(data)
+
+                    },
+                    error: function () {
+                        alert('Erreur lors de la requête AJAX.');
+                        // Autres actions à effectuer en cas d'erreur
+                    }
+                    //let qty = $(this).parent("td").siblings("td").children("input[x-model='item.quantity']")
+                })
+            })
         })
     </script>
 

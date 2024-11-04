@@ -22,6 +22,7 @@ class GroupeRepository extends ServiceEntityRepository
         $em = $this->getEntityManager();
         $query = $em->createQuery(
             'select g.id, g.designation, o.designation organisation
+            , (select count(c.id) from App\Entity\Contact c where c.groupe = g.id) as totalContact
                     from App\Entity\Groupe g, App\Entity\Organisation o 
                     where g.organisation = o.id
                     and o.user = :user
@@ -37,7 +38,8 @@ class GroupeRepository extends ServiceEntityRepository
         $em = $this->getEntityManager();
         $query = $em->createQuery(
             'select g.id, g.designation, o.designation organisation
-                    from App\Entity\Groupe g, App\Entity\Organisation o 
+                    , (select count(c.id) from App\Entity\Contact c where c.groupe = g.id) as totalContact
+                    from App\Entity\Groupe g, App\Entity\Organisation o
                     where g.organisation = o.id
                     and g.organisation = :organisation
             '

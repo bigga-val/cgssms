@@ -19,6 +19,9 @@ class Templatesms
     #[ORM\ManyToOne]
     private ?User $user = null;
 
+    #[ORM\Column(length: 50, nullable: true)]
+    private ?string $titre = null;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -44,6 +47,18 @@ class Templatesms
     public function setUser(?User $user): static
     {
         $this->user = $user;
+
+        return $this;
+    }
+
+    public function getTitre(): ?string
+    {
+        return $this->titre;
+    }
+
+    public function setTitre(?string $titre): static
+    {
+        $this->titre = $titre;
 
         return $this;
     }

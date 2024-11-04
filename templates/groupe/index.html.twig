@@ -16,6 +16,7 @@
                             <tr>
                                 <th>#</th>
                                 <th>Designation</th>
+                                <th>Total Contact</th>
                                 <th>Organisation</th>
                                 <th>actions</th>
                             </tr>
@@ -25,6 +26,7 @@
                                 <tr>
                                     <td>{{ groupe.id }}</td>
                                     <td>{{ groupe.designation }}</td>
+                                    <td>{{ groupe.totalContact }}</td>
                                     <td>{{ groupe.organisation }}</td>
                                     <td>
                                         <a href="{{ path('app_groupe_show', {'id': groupe.id}) }}">Details</a>

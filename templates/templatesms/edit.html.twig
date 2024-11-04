@@ -1,13 +1,31 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Edit Templatesms{% endblock %}
+{% block title %}Modifier un modele de Message{% endblock %}
 
 {% block body %}
-    <h1>Edit Templatesms</h1>
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header bg-info">
+                    <h3>Modifier un modele</h3>
+                    {#                    <a class="btn btn-success" href="{{ path('app_templatesms_new') }}">Creer</a>#}
 
-    {{ include('templatesms/_form.html.twig', {'button_label': 'Update'}) }}
+                </div>
+                <div class="card-body">
+                    {{ include('templatesms/_form.html.twig', {'button_label': 'Update'}) }}
 
-    <a href="{{ path('app_templatesms_index') }}">back to list</a>
 
-    {{ include('templatesms/_delete_form.html.twig') }}
+{#                    {{ include('templatesms/_delete_form.html.twig') }}#}
+                </div>
+                <div class="card-footer">
+
+                    <a href="{{ path('app_templatesms_index') }}">back to list</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
 {% endblock %}

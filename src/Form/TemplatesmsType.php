@@ -15,10 +15,7 @@ class TemplatesmsType extends AbstractType
     {
         $builder
             ->add('texte')
-            ->add('user', EntityType::class, [
-                'class' => User::class,
-                'choice_label' => 'id',
-            ])
+            ->add('titre')
         ;
     }
 

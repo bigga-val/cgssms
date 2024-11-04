@@ -1,11 +1,29 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}New Templatesms{% endblock %}
+{% block title %}Creer un modele de Message{% endblock %}
 
 {% block body %}
-    <h1>Create new Templatesms</h1>
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header bg-info d-flex justify-content-between">
+                    <h3>Creer un modele</h3>
+                    <a class="btn btn-success" href="{{ path('app_templatesms_new') }}">Creer</a>
 
-    {{ include('templatesms/_form.html.twig') }}
+                </div>
+                <div class="card-body">
+                    {{ include('templatesms/_form.html.twig') }}
 
-    <a href="{{ path('app_templatesms_index') }}">back to list</a>
+                </div>
+                <div>
+                    <a href="{{ path('app_templatesms_index') }}">back to list</a>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
 {% endblock %}
