@@ -45,7 +45,7 @@ final class HistoriqueController extends AbstractController
 
     public function create($sender, $message, $numero, $reponse, $ticket,
         EntityManagerInterface $entityManager
-    ): Response{
+    ): void{
         $historique = new Historique();
         $historique->setUser($this->getUser());
         $historique->setMessage($message);

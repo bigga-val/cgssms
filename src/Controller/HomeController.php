@@ -29,7 +29,7 @@ class HomeController extends AbstractController
         if(!$this->getUser()){
             return $this->redirectToRoute('app_login');
         }
-        $historiques = $historiqueRepository->findBy(['user'=>$this->getUser()]);
+        $historiques = $historiqueRepository->findBy(['user'=>$this->getUser()], ['date' => 'DESC'], 5);
 
         $contacts = $contactRepository->findContactsByUser($this->getUser()->getId());
         $groupes = $groupeRepository->findGroupesByUser($this->getUser()->getId());

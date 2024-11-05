@@ -24,7 +24,7 @@
                         <tbody>
                         {% for historique in historiques %}
                             <tr>
-                                <td>{{ historique.date | date("d/m/Y H:m:s") }}</td>
+                                <td>{{ historique.date | format_datetime() }}</td>
                                 <td>{{ historique.numero | replace({'%2b': '+'}) }}</td>
                                 <td>{{ historique.message | replace({'+': ' '}) }}</td>
                                 <td>{{ historique.ticket }}</td>

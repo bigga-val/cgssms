@@ -114,7 +114,7 @@
         <div class="col-lg-12 col-12">
             <div class="card">
                 <div class="card-header bg-gradient-info">
-                    <h5>Vos derniers envois</h5>
+                    <h5>Mes 5 derniers envois</h5>
                 </div>
                 <div class="card-body">
                     <table class="table table-bordered">
@@ -129,7 +129,7 @@
                         <tbody>
                         {% for historique in historiques %}
                         <tr>
-                            <td>{{ historique.date | date("d/m/Y H:m:s") }}</td>
+                            <td>{{ historique.date | format_datetime() }}</td>
                             <td>{{ historique.numero | replace({'%2b': '+'}) }}</td>
                             <td>{{ historique.message | replace({'+': ' '}) }}</td>
                             <td>{{ historique.reponse }}</td>
