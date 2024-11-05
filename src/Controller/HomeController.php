@@ -121,6 +121,27 @@ class HomeController extends AbstractController
         return new JsonResponse([$request->get("titre"), $request->get("texte")]);
     }
 
+    #[Route('/EnvoiRapideSMS', name: 'EnvoiRapideSMS', methods: ['GET'])]
+    public function EnvoiRapideSMS(Request $request,
+                                   EntityManagerInterface $entityManager,
+                                   ContactRepository $contactRepository,
+                                   HistoriqueController $historiqueController
+    ): Response
+    {
+        $message = $request->get("message");
+        $sender = 'mulykap';//$request->get("sender");
+        $numero = $request->get("numero");
+
+        $message = str_replace(' ', '+', $message);
+        $numero = '%2b243'.substr($numero, -9);
+        $response = $this->envoyer($numero, $message, $sender);
+        $historiqueController->create($sender, $message, $numero, $response, 'ticket',
+            $entityManager
+        );
+        return $this->redirectToRoute('app_home');
+
+    }
+
     #[Route('/JsonEnvoyerSMS', name: 'JsonEnvoyerSMS', methods: ['GET'])]
     public function JsonEnvoyerSMS(Request $request,
                                      EntityManagerInterface $entityManager,
