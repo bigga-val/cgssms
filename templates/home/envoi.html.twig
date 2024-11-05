@@ -172,9 +172,10 @@
             })
 
             $("#btn-envoyer-sms").on("click", function(e){
-                let message = $("#btn-envoyer-sms").val()
+                let message = $("#message").val()
                 let listID = $("#listes").val()
                 let sender = $("#organisation").val()
+                console.log(message, listID, sender)
 
                 $.ajax({
                     url: 'JsonEnvoyerSMS?sender='+sender+'&message='+message+'&groupeID='+listID,

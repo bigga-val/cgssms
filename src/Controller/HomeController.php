@@ -62,12 +62,12 @@ class HomeController extends AbstractController
     public function envoyer($numero, $message, $sender)
     {
             try {
-                $destinataire = "";
-                $message = "";
-                $sender = "";
+                //$destinataire = "";
+                //$message = "";
+                //$sender = "";
                 $curl = curl_init();
                 curl_setopt_array($curl, array(
-                    CURLOPT_URL => "https://api-2.mtarget.fr/messages?username=vousdabord&password=XJK8H8sDP4X0QoWe0OGebAbzRkgwbq1O&msisdn=" . $destinataire . "&msg=" . $message . "&sender=" . $sender,
+                    CURLOPT_URL => "https://api-2.mtarget.fr/messages?username=vousdabord&password=XJK8H8sDP4X0QoWe0OGebAbzRkgwbq1O&msisdn=" . $numero . "&msg=" . $message . "&sender=" . $sender,
                     CURLOPT_RETURNTRANSFER => true,
                     CURLOPT_ENCODING => "",
                     CURLOPT_MAXREDIRS => 10,
@@ -122,19 +122,24 @@ class HomeController extends AbstractController
     public function JsonEnvoyerSMS(Request $request,
                                      EntityManagerInterface $entityManager,
                                     ContactRepository $contactRepository,
-
+                                    HistoriqueController $historiqueController
     ): JsonResponse
     {
         $message = $request->get("message");
-        $sender = $request->get("sender");
+        $sender = 'mulykap';//$request->get("sender");
         $groupeID = $request->get("groupeID");
         $contacts = $contactRepository->findBy(['groupe'=>$groupeID]);
+        $response = '';
         if(count($contacts)==0){
             return new JsonResponse("Aucun contact trouve");
         }else{
             foreach ($contacts as $contact) {
-                $numero = '%2b'.substr($contact->getTelephone(), -9);
+                $message = str_replace(' ', '+', $message);
+                $numero = '%2b243'.substr($contact->getTelephone(), -9);
                 $response = $this->envoyer($numero, $message, $sender);
+                $historiqueController->create($sender, $message, $numero, $response, 'ticket',
+                     $entityManager
+    );
             }
         }
         return new JsonResponse($response);
