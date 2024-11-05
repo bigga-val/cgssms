@@ -5,6 +5,7 @@ namespace App\Controller;
 use App\Entity\Organisation;
 use App\Repository\ContactRepository;
 use App\Repository\GroupeRepository;
+use App\Repository\HistoriqueRepository;
 use App\Repository\OrganisationRepository;
 use App\Repository\TemplatesmsRepository;
 use App\Entity\Templatesms;
@@ -22,12 +23,13 @@ class HomeController extends AbstractController
     #[Route('/', name: 'app_home')]
     public function index(
         ContactRepository $contactRepository,
-        GroupeRepository  $groupeRepository, TemplatesmsRepository $templateRepository,
+        GroupeRepository  $groupeRepository, TemplatesmsRepository $templateRepository, HistoriqueRepository $historiqueRepository,
     ): Response
     {
         if(!$this->getUser()){
             return $this->redirectToRoute('app_login');
         }
+        $historiques = $historiqueRepository->findBy(['user'=>$this->getUser()]);
 
         $contacts = $contactRepository->findContactsByUser($this->getUser()->getId());
         $groupes = $groupeRepository->findGroupesByUser($this->getUser()->getId());
@@ -37,6 +39,7 @@ class HomeController extends AbstractController
             'controller_name' => 'HomeController',
             'contacts' => count($contacts),
             'groupes' => count($groupes),
+            'historiques' => $historiques,
         ]);
     }
 
