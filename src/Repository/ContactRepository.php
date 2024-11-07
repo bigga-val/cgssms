@@ -32,6 +32,21 @@ class ContactRepository extends ServiceEntityRepository
             //$query->setParameter('mydate', $mydate->format('Y-m-d'));
             return $query->getResult();
         }
+    public function findContacts(): array
+    {
+        $em = $this->getEntityManager();
+        $query = $em->createQuery(
+            'select c.id, c.telephone, c.nom, c.postnom, c.adresse, c.fonction, g.designation, o.designation organisation 
+                    from App\Entity\Contact c, App\Entity\Groupe g, App\Entity\Organisation o 
+                    where c.groupe = g.id 
+                    and g.organisation = o.id
+                    
+            '
+        );
+        //$query->setParameter('user', $value);
+        //$query->setParameter('mydate', $mydate->format('Y-m-d'));
+        return $query->getResult();
+    }
 
 
 

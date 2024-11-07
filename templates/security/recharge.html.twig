@@ -1,0 +1,64 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Historique des Recharges{% endblock %}
+
+{% block body %}
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-header bg-info">
+                        <h3>Historique des Recharges</h3>
+                    </div>
+                    <div class="card-body">
+                        <table class="table">
+                            <thead>
+                            <tr>
+                                <th>#</th>
+                                <th>User</th>
+                                <th>Client</th>
+                                <th>Ancienne Balance</th>
+                                <th>Ajout</th>
+                                <th>Date</th>
+                                <th>Action</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            {% set counter=0 %}
+                            {% for recharge in recharges %}
+                                {% set counter=counter+1 %}
+
+                                <tr>
+                                    <td>{{ counter }}</td>
+                                    <td>{{ recharge.user }}</td>
+                                    <td>{{ recharge.client }}</td>
+                                    <td>{{ recharge.oldQuantite }}</td>
+                                    <td>{{ recharge.quantite }}</td>
+                                    <td>{{ recharge.date | format_datetime() }}</td>
+                                    <td>
+{#                                                                                <span class="btn btn-sm btn-primary" id="{{ user.id }}">Recha</span>#}
+                                        {#                                        <span class="btn btn-sm btn-primary" id="{{ user.id }}">Recha</span>#}
+                                                                                <a href="{{ path('app_historique_index', {'userID': recharge.utilisateur.id}) }}">edit</a>
+
+                                    </td>
+                                </tr>
+                            {% else %}
+                                <tr>
+                                    <td colspan="4">no records found</td>
+                                </tr>
+                            {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="card-footer">
+                        {#                        <a href="{{ path('app_groupe_new') }}">Create new</a>#}
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+
+{% endblock %}

@@ -15,9 +15,18 @@ use Symfony\Component\Routing\Attribute\Route;
 final class HistoriqueController extends AbstractController
 {
     #[Route(name: 'app_historique_index', methods: ['GET'])]
-    public function index(HistoriqueRepository $historiqueRepository): Response
+    public function index(Request $request, HistoriqueRepository $historiqueRepository): Response
     {
-        $historiques = $historiqueRepository->findBy(['user'=>$this->getUser()]);
+        if(!$this->isGranted('ROLE_ADMIN')){
+            $historiques = $historiqueRepository->findBy(['user'=>$this->getUser()]);
+        }else{
+            $userID = $request->get("userID");
+            if($userID != null){
+                $historiques = $historiqueRepository->findBy(['user'=>$userID]);
+            }else{
+                $historiques = $historiqueRepository->findAll();
+            }
+        }
         return $this->render('historique/index.html.twig', [
             'historiques' => $historiques,
         ]);

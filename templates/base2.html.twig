@@ -37,19 +37,19 @@
 
 
     </head>
-    <body class="hold-transition sidebar-mini">
-    <div class="wrapper">
+    <body class="hold-transition login-page">
+{#    <div class="wrapper">#}
 
-    {% include("components/sidebar.html.twig") %}
+{#    {% include("components/sidebar.html.twig") %}#}
         <!-- Main content -->
-        <div class="content-wrapper">
+{#        <div class="content-wrapper">#}
 
-        <section class="content">
+{#        <section class="content">#}
         {% block body %}{% endblock %}
-        </section>
-        </div>
+{#        </section>#}
+{#        </div>#}
 
-        {% include("components/footer.html.twig") %}
+{#        {% include("components/footer.html.twig") %}#}
 
         {% block javascripts %}
             {#            {% block importmap %}{{ importmap('app') }}{% endblock %}#}
@@ -95,6 +95,6 @@
             <!-- date-range-picker -->
             <script src=".{{ asset("plugins/daterangepicker/daterangepicker.js") }}"></script>
         {% endblock %}
-    </div>
+{#    </div>#}
     </body>
 </html>

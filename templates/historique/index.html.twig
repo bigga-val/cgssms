@@ -22,8 +22,11 @@
                         </tr>
                         </thead>
                         <tbody>
+                        {% set counter = 0 %}
                         {% for historique in historiques %}
+                            {% set counter = counter + 1 %}
                             <tr>
+                                <td>{{ counter }}</td>
                                 <td>{{ historique.date | format_datetime() }}</td>
                                 <td>{{ historique.numero | replace({'%2b': '+'}) }}</td>
                                 <td>{{ historique.message | replace({'+': ' '}) }}</td>

@@ -17,6 +17,11 @@ final class TemplatesmsController extends AbstractController
     #[Route(name: 'app_templatesms_index', methods: ['GET'])]
     public function index(TemplatesmsRepository $templatesmsRepository): Response
     {
+        if($this->isGranted('ROLE_ADMIN')){
+            $templatesms = $templatesmsRepository->findAll();
+        }else{
+            $templatesms = $templatesmsRepository->findBy(["user"=>$this->getUser()]);
+        }
         return $this->render('templatesms/index.html.twig', [
             'templatesms' => $templatesmsRepository->findAll(),
         ]);

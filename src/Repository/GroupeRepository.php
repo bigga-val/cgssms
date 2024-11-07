@@ -33,6 +33,22 @@ class GroupeRepository extends ServiceEntityRepository
         return $query->getResult();
     }
 
+    public function findGroupes(): array
+    {
+        $em = $this->getEntityManager();
+        $query = $em->createQuery(
+            'select g.id, g.designation, o.designation organisation
+            , (select count(c.id) from App\Entity\Contact c where c.groupe = g.id) as totalContact
+                    from App\Entity\Groupe g, App\Entity\Organisation o 
+                    where g.organisation = o.id
+                    
+            '
+        );
+        //$query->setParameter('user', $value);
+        //$query->setParameter('mydate', $mydate->format('Y-m-d'));
+        return $query->getResult();
+    }
+
     public function findGroupesByOrganisation($value): array
     {
         $em = $this->getEntityManager();

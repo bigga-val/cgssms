@@ -1,0 +1,98 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Liste des Utilisateurs{% endblock %}
+
+{% block body %}
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-header bg-info">
+                        <h3>Liste des Utilisateurs</h3>
+                    </div>
+                    <div class="card-body">
+                        <table class="table">
+                            <thead>
+                            <tr>
+                                <th>#</th>
+                                <th>Username</th>
+                                <th>Email</th>
+                                <th>Telephone</th>
+                                <th>Total SMS</th>
+                                <th>Used SMS</th>
+                                <th>Action</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            {% for user in users %}
+                                <tr>
+                                    <td>{{ user.id }}</td>
+                                    <td>{{ user.username }}</td>
+                                    <td>{{ user.email }}</td>
+                                    <td>{{ user.telephone }}</td>
+                                    <td>{{ user.totalSms }}</td>
+                                    <td>{{ user.usedSms }}</td>
+                                    <td>
+{#                                        <span class="btn btn-sm btn-primary" id="{{ user.id }}">Recha</span>#}
+{#                                        <span class="btn btn-sm btn-primary" id="{{ user.id }}">Recha</span>#}
+{#                                        <a href="{{ path('app_groupe_edit', {'id': groupe.id}) }}">edit</a>#}
+                                        <span id="{{ user.id }}" title="{{ user.username }}" type="button" class="btn-recharge btn btn-sm btn-info" data-toggle="modal" data-target="#modal-default">
+                                            Recharger
+                                        </span>
+                                    </td>
+                                </tr>
+                            {% else %}
+                                <tr>
+                                    <td colspan="4">no records found</td>
+                                </tr>
+                            {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="card-footer">
+{#                        <a href="{{ path('app_groupe_new') }}">Create new</a>#}
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <div class="modal fade" id="modal-default">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title">Recharge l'utilisateur <span class="font-weight-bold" id="user_name"></span></h4>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <form action="{{ path("app_user_recharge") }}">
+                <div class="modal-body">
+                    <input type="hidden" name="user" id="user">
+                    <input name="quantite" placeholder="Entrez le nombre de SMS a ajouter" type="text" class="form-control" id="titre">
+                </div>
+                <div class="modal-footer justify-content-between">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                    <input id="enregistrer-model" type="submit"  class="btn btn-primary" value="Recharger">
+                </div>
+                </form>
+            </div>
+            <!-- /.modal-content -->
+        </div>
+        <!-- /.modal-dialog -->
+    </div>
+<script src="{{ asset("plugins/jquery/jquery.min.js") }}"></script>
+<script>
+    $(document).ready(function(e){
+        //alert("bien")
+        $(".btn-recharge").on("click", function(e){
+            //console.log($(this).attr("id"))
+            let userID = $(this).attr("id")
+            $("#user").val($(this).attr("id"))
+            $("#user_name").text($(this).attr("title"))
+        })
+    })
+</script>
+{% endblock %}

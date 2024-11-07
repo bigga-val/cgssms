@@ -17,7 +17,14 @@ final class OrganisationController extends AbstractController
     #[Route(name: 'app_organisation_index', methods: ['GET'])]
     public function index(OrganisationRepository $organisationRepository): Response
     {
-        $organisations = $organisationRepository->findBy(['user'=>$this->getUser()], ['designation' => 'ASC']);
+        if($this->isGranted("ROLE_ADMIN")){
+            $organisations = $organisationRepository->findAll();
+
+        }else{
+
+            $organisations = $organisationRepository->findBy(['user'=>$this->getUser()], ['designation' => 'ASC']);
+        }
+
         return $this->render('organisation/index.html.twig', [
             'organisations' => $organisations
         ]);

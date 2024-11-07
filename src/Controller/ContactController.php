@@ -3,10 +3,14 @@
 namespace App\Controller;
 
 use App\Entity\Contact;
+use App\Entity\Groupe;
 use App\Form\ContactType;
 use App\Repository\ContactRepository;
+use App\Repository\GroupeRepository;
+use App\Repository\OrganisationRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
@@ -17,7 +21,13 @@ final class ContactController extends AbstractController
     #[Route(name: 'app_contact_index', methods: ['GET'])]
     public function index(ContactRepository $contactRepository): Response
     {
-        $contacts = $contactRepository->findContactsByUser($this->getUser()->getId());
+        if($this->isGranted('ROLE_ADMIN')){
+            $contacts = $contactRepository->findAll();
+
+        }else{
+
+            $contacts = $contactRepository->findContactsByUser($this->getUser()->getId());
+        }
         //dd($contacts);
         return $this->render('contact/index.html.twig', [
             'contacts' => $contacts,
@@ -42,6 +52,25 @@ final class ContactController extends AbstractController
             'contact' => $contact,
             'form' => $form,
         ]);
+    }
+
+    #[Route('/JsonSaveContact', name: 'json_contact_new', methods: ['GET', 'POST'])]
+    public function JsonSaveGroupe(Request $request, EntityManagerInterface $entityManager,
+                                   GroupeRepository $groupeRepository
+    ): JsonResponse
+    {
+        $contact = new Contact();
+        $contact->setTelephone($request->get('telephone'));
+        $contact->setNom($request->get('nom'));
+        $contact->setPostnom($request->get('postnom'));
+        $contact->setAdresse($request->get('adresse'));
+        $contact->setFonction($request->get('fonction'));
+        $contact->setgroupe($groupeRepository->find($request->get('groupeID')));
+        $entityManager->persist($contact);
+        $entityManager->flush();
+
+
+        return new JsonResponse(true);
     }
 
     #[Route('/{id}', name: 'app_contact_show', methods: ['GET'])]

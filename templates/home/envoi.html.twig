@@ -56,8 +56,12 @@
                                     Enregistrer comme modele
                                 </button>
                             </label>
-                            <textarea maxlength="160" name="message" id="message" cols="30" rows="5" class="form-control"></textarea>
-                            <i><span id="longueur">0</span>  Sur 160 Caracteres</i>
+                            <div>
+                                Inclure <button class="btn btn-include">[Nom]</button> <button class="btn btn-include">[Postnom]</button>
+                                <button class="btn btn-include">[Fonction]</button> <button class="btn btn-include">[Adresse]</button>
+                            </div>
+                            <textarea name="message" id="message" cols="30" rows="5" class="form-control"></textarea>
+{#                            <i id="texte-longueur"><span id="longueur">0</span>  Sur 160 Caracteres</i>#}
                         </div>
                         <div class="form-group">
                             <input type="submit" id="btn-envoyer-sms" value="Envoyer" class="btn btn-success">
@@ -122,6 +126,17 @@
                 })
             })
 
+
+            $('.btn-include').click(function() {
+                var texteAInserer = $(this).text();
+                var element = $('#message'); // Remplacez par l'id de votre champ de texte
+                var valeurActuelle = element.val();
+                var positionCurseur = element[0].selectionStart;
+
+                element.val(valeurActuelle.substring(0, positionCurseur) + texteAInserer + valeurActuelle.substring(positionCurseur));
+                $("#texte-longueur").hide()
+            });
+
             /////
             $('#template').on("change", function(e){
                 //alert("bien")
@@ -175,7 +190,7 @@
                 let message = $("#message").val()
                 let listID = $("#listes").val()
                 let sender = $("#organisation").val()
-                console.log(message, listID, sender)
+                // console.log(message, listID, sender)
 
                 $.ajax({
                     url: 'JsonEnvoyerSMS?sender='+sender+'&message='+message+'&groupeID='+listID,
@@ -191,6 +206,7 @@
                     }
                     //let qty = $(this).parent("td").siblings("td").children("input[x-model='item.quantity']")
                 })
+                window.location.replace('{{ path('app_home') }}');
             })
         })
     </script>

@@ -1,8 +1,12 @@
 <?php
 
 namespace App\Controller;
+use App\Entity\Recharge;
+use App\Repository\RechargeRepository;
 use App\Repository\UserRepository;
+use DateTimeZone;
 use Doctrine\ORM\EntityManagerInterface;
+use http\Client\Curl\User;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
@@ -32,11 +36,80 @@ class SecurityController extends AbstractController
         throw new \LogicException('This method can be blank - it will be intercepted by the logout key on your firewall.');
     }
 
+    #[Route(path:'/listeusers', name: 'app_liste_users')]
+    public function listeusers(UserRepository $userRepository): Response
+    {
+        if(!$this->isGranted('ROLE_ADMIN')){
+            return throw $this->createAccessDeniedException();
+        }
+        $users = $userRepository->findAll();
+        return $this->render('security/liste.html.twig', [
+            'users'=> $users]
+        );
+    }
+
     #[Route(path:'/profile', name: 'app_profile')]
     public function profile(): Response
     {
 
         return $this->render('security/profile.html.twig');
+    }
+
+    #[Route(path:'/recharge', name: 'app_user_recharge')]
+    public function recharge(Request $request,
+        UserRepository $userRepository,
+    RechargeRepository $rechargeRepository,
+    EntityManagerInterface $entityManager,
+    ): Response
+    {
+        $userID = $request->get('user');
+        $quantite = $request->get('quantite');
+
+        $user = $userRepository->find($userID);
+        $this->createRecharge(
+            $this->getUser()->getUserIdentifier(),
+            $this->getUser(),
+            $user->getUsername(),
+            $user,
+            $quantite,
+            $user->getTotalSMS(),
+            $entityManager
+        );
+
+        $userqte = intval($user->getTotalSMS())  + intval($quantite);
+        $user->setTotalSMS($userqte);
+        $entityManager->persist($user);
+        $entityManager->flush();
+
+        //dd($userID, $quantite);
+        return $this->redirectToRoute('app_liste_users');
+    }
+
+    #[Route(path:'/listerecharge', name: 'app_liste_recharges')]
+    public function listerecharge(Request $request,
+     RechargeRepository $rechargeRepository
+    ): Response
+    {
+        $recharges = $rechargeRepository->findBy([], ['date' => 'DESC']);
+        return $this->render('security/recharge.html.twig', [
+            'recharges' => $recharges
+        ]);
+
+    }
+
+    public function createRecharge($user, $userID, $client, $clientID, $quantite, $balance,
+    EntityManagerInterface $entityManager
+    ):void{
+        $recharge = new Recharge();
+        $recharge->setUser($user);
+        $recharge->setUtilisateur($userID);
+        $recharge->setClient($client);
+        $recharge->setClientid($clientID);
+        $recharge->setQuantite($quantite);
+        $recharge->setOldQuantite($balance);
+        $recharge->setDate(new \datetime('now', new DateTimeZone('Africa/Harare')));
+        $entityManager->persist($recharge);
+        $entityManager->flush();
     }
 
     #[Route(path:'/edit_profile', name: 'edit_profile')]

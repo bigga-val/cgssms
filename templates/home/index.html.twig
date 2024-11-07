@@ -10,7 +10,14 @@
             <!-- small box -->
             <div class="small-box bg-info">
                 <div class="inner">
-                    <h3>{{ app.user.totalSMS }}</h3>
+                    <h3>
+{#                        {{ app.user.totalSMS }}#}
+                        {% if app.user.totalSMS is null or app.user.totalSMS is empty %}
+                            0
+                        {% else %}
+                            {{ app.user.totalSMS }}
+                        {% endif %}
+                    </h3>
 
                     <p>SMS</p>
                 </div>
@@ -25,7 +32,14 @@
             <!-- small box -->
             <div class="small-box bg-success">
                 <div class="inner">
-                    <h3>{{ app.user.usedSMS }}<sup style="font-size: 20px"></sup></h3>
+                    <h3>
+{#                        {{ app.user.usedSMS }}#}
+                        {% if app.user.usedSMS is null or app.user.usedSMS is empty %}
+                            0
+                        {% else %}
+                            {{ app.user.usedSMS }}
+                        {% endif %}
+                        <sup style="font-size: 20px"></sup></h3>
 
                     <p>SMS Utilises</p>
                 </div>
@@ -168,8 +182,9 @@
     </div>
 </div>
     <!-- date-range-picker -->
-    <script src="{{ asset("plugins/daterangepicker/daterangepicker.js") }}"></script>
     <script src="{{ asset("plugins/jquery/jquery.js") }}"></script>
+
+    <script src="{{ asset("plugins/daterangepicker/daterangepicker.js") }}"></script>
     <script>
         $('#reservation').daterangepicker()
     </script>

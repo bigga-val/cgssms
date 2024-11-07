@@ -29,10 +29,17 @@ class HomeController extends AbstractController
         if(!$this->getUser()){
             return $this->redirectToRoute('app_login');
         }
-        $historiques = $historiqueRepository->findBy(['user'=>$this->getUser()], ['date' => 'DESC'], 5);
+        if ($this->isGranted('ROLE_ADMIN')) {
+            $historiques = $historiqueRepository->findBy([], ['date' => 'DESC'], 5);
+            $contacts = $contactRepository->findContacts(true);
+            $groupes = $groupeRepository->findGroupes();
+        }else{
+            $historiques = $historiqueRepository->findBy(['user'=>$this->getUser()], ['date' => 'DESC'], 5);
 
-        $contacts = $contactRepository->findContactsByUser($this->getUser()->getId());
-        $groupes = $groupeRepository->findGroupesByUser($this->getUser()->getId());
+            $contacts = $contactRepository->findContactsByUser($this->getUser()->getId());
+            $groupes = $groupeRepository->findGroupesByUser($this->getUser()->getId());
+        }
+
         //dd($contacts, count($contacts), $groupes, count($groupes));
 
         return $this->render('home/index.html.twig', [
@@ -51,9 +58,14 @@ class HomeController extends AbstractController
 
     ): Response
     {
-        $organisations = $organisationRepository->findBy(["user"=>$this->getUser()]);
-        $groupes = $groupeRepository->findBy(["organisation"=>1]);
-        $templates = $templatesmsRepository->findBy(["user"=>$this->getUser()]);
+        if($this->isGranted('ROLE_ADMIN')){
+            $organisations = $organisationRepository->findAll();
+            $templates = $templatesmsRepository->findAll();
+        }else{
+            $organisations = $organisationRepository->findBy(["user"=>$this->getUser()]);
+            $templates = $templatesmsRepository->findBy(["user"=>$this->getUser()]);
+        }
+
 
         return $this->render("home/envoi.html.twig", [
             'organisations' => $organisations,
@@ -158,6 +170,11 @@ class HomeController extends AbstractController
             return new JsonResponse("Aucun contact trouve");
         }else{
             foreach ($contacts as $contact) {
+
+                $message = str_replace('[Nom]', $contact->getNom(), $message);
+                $message = str_replace('[Postnom]', $contact->getPostnom(), $message);
+                $message = str_replace('[Adresse]', $contact->getAdresse(), $message);
+                $message = str_replace('[Fonction]', $contact->getFonction(), $message);
                 $message = str_replace(' ', '+', $message);
                 $numero = '%2b243'.substr($contact->getTelephone(), -9);
                 $response = $this->envoyer($numero, $message, $sender);
