@@ -179,8 +179,7 @@ class HomeController extends AbstractController
                 $numero = '%2b243'.substr($contact->getTelephone(), -9);
                 $response = $this->envoyer($numero, $message, $sender);
                 $historiqueController->create($sender, $message, $numero, $response, 'ticket',
-                     $entityManager
-    );
+                     $entityManager);
             }
         }
         return new JsonResponse($response);
