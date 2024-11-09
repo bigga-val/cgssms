@@ -222,8 +222,12 @@
                         data: {},
                         success: function (data) {
                             console.log(data)
-                            if(data['result'] === true){
-                                //window.location.replace('{{ path('app_home') }}');
+                            if(data[0] === true){
+                                window.location.replace('{{ path('app_historique_index') }}');
+                            }else{
+                                $("#erreur-longueur")
+                                    .text(data)
+                                    .removeClass("d-none")
                             }
                         },
                         error: function () {

@@ -9,6 +9,7 @@ use App\Repository\HistoriqueRepository;
 use App\Repository\OrganisationRepository;
 use App\Repository\TemplatesmsRepository;
 use App\Entity\Templatesms;
+use App\Repository\UserRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use PHPUnit\Framework\Constraint\Count;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -94,17 +95,16 @@ class HomeController extends AbstractController
                         "content-type: application/x-www-form-urlencoded"
                     ),
                 ));
-
                 $response = curl_exec($curl);
                 $err = curl_error($curl);
-
                 curl_close($curl);
                 //dd("Erreur: ", $err, "Response:", $response);
                 //return $this->redirectToRoute('app_home');
-            } catch (Exception $e) {
+                return $response ;//. ' || ' . $err;
 
+            } catch (Exception $e) {
+                return $e->getMessage();
             }
-        return $response;
 
     }
     #[Route('/JsonListGroupsByOrganisation/{id}', name: 'JsonListGroupsByOrganisation', methods: ['GET'])]
@@ -137,7 +137,8 @@ class HomeController extends AbstractController
     public function EnvoiRapideSMS(Request $request,
                                    EntityManagerInterface $entityManager,
                                    ContactRepository $contactRepository,
-                                   HistoriqueController $historiqueController
+                                   HistoriqueController $historiqueController,
+                                    UserRepository $userRepository,
     ): Response
     {
         $message = $request->get("message");
@@ -147,9 +148,24 @@ class HomeController extends AbstractController
         $message = str_replace(' ', '+', $message);
         $numero = '%2b243'.substr($numero, -9);
         $response = $this->envoyer($numero, $message, $sender);
-        $historiqueController->create($sender, $message, $numero, $response, 'ticket',
+        $data = json_decode($response, true);
+
+        // Accéder aux valeurs souhaitées
+        $code = $data['results'][0]['code'];
+        $reason = $data['results'][0]['reason'];
+//                    $ticket = $data['results'][0]['ticket'];
+
+        $historiqueController->create($sender, $message, $numero, $code, $reason,
             $entityManager
         );
+        if($code == 0){
+            $user = $userRepository->find($this->getUser()->getId());
+            $user->setTotalSMS($user->getTotalSMS() - 1);
+            $user->setUsedSMS($user->getUsedSMS() + 1);
+            $entityManager->persist($user);
+            $entityManager->flush();
+        }
+        //dd($response);
         return $this->redirectToRoute('app_home');
 
     }
@@ -158,7 +174,8 @@ class HomeController extends AbstractController
     public function JsonEnvoyerSMS(Request $request,
                                      EntityManagerInterface $entityManager,
                                     ContactRepository $contactRepository,
-                                    HistoriqueController $historiqueController
+                                    HistoriqueController $historiqueController,
+    UserRepository $userRepository,
     ): JsonResponse
     {
         $message = $request->get("message");
@@ -166,52 +183,53 @@ class HomeController extends AbstractController
         $groupeID = $request->get("groupeID");
         $contacts = $contactRepository->findBy(['groupe'=>$groupeID]);
 
+        $user = $userRepository->find($this->getUser()->getId());
+
         $response = '';
         if(count($contacts)==0){
             return new JsonResponse("Aucun contact trouve");
+        }else if(count($contacts) >= $user->getTotalSMS()) {
+            return new JsonResponse("Vous n'avez pas assez de credit.");
         }else{
-            $counter = 0;
             $numbers = "";
-            $sentmsg = "";
-
-//            for($i = 0; $i < count($contacts); $i++){
-//
-//            }
-            try {
-                foreach ($contacts as $contact) {
-                    $tosend = $message;
-                    if (str_contains($tosend, '[Nom]')) {
-                        $tosend = str_replace('[Nom]', $contact->getNom().' 1', $message);
-                    }
-                    if (str_contains($tosend, '[Postnom]')) {
-                        $tosend = str_replace('[Postnom]', $contact->getPostnom().' 2', $message);
-                    }
-                    if (str_contains($tosend, '[Adresse]')) {
-                        $tosend = str_replace('[Adresse]', $contact->getAdresse().' 3', $message);
-                    }
-                    if (str_contains($tosend, '[Fonction]')) {
-                        $tosend = str_replace('[Fonction]', $contact->getFonction().' 4', $message);
-                    }
-                    $tosend = str_replace(' ', '+', $tosend);
-                    $numero = '%2b243'.substr($contact->getTelephone(), -9);
-                    $response = $this->envoyer($numero, $message, $sender);
-                    $historiqueController->create($sender, $tosend, $numero, $response, 'ticket',
-                        $entityManager);
-                    //$counter++;
-                    $numbers .= $contact->getTelephone();
-//                    return new JsonResponse([$counter, $message, $numbers, count($contacts)]);
-//                        return  new JsonResponse($contact->gettelephone());
-                    $sentmsg .= ' - '. $tosend;
+            foreach ($contacts as $contact) {
+                try {
+                $tosend = $message;
+                if (str_contains($tosend, '[Nom]')) {
+                    $tosend = str_replace('[Nom]', $contact->getNom().' 1', $tosend);
                 }
-//                return new JsonResponse([$sentmsg, $message,
-//                    str_contains($message, '[Nom]'), $numbers,
-//                    count($contacts), str_replace('[Nom]', $contacts[0]->getNom().'1', $message)]);
-                return new JsonResponse(['true']);
+                if (str_contains($tosend, '[Postnom]')) {
+                    $tosend = str_replace('[Postnom]', $contact->getPostnom().' 2', $tosend);
+                }
+                if (str_contains($tosend, '[Adresse]')) {
+                    $tosend = str_replace('[Adresse]', $contact->getAdresse().' 3', $tosend);
+                }
+                if (str_contains($tosend, '[Fonction]')) {
+                    $tosend = str_replace('[Fonction]', $contact->getFonction().' 4', $tosend);
+                }
+                $tosend = str_replace(' ', '+', $tosend);
+                $numero = '%2b243'.substr($contact->getTelephone(), -9);
+                $response = $this->envoyer($numero, $tosend, $sender);
+                    $data = json_decode($response, true);
 
-            }catch (\Exception $e){
-                return new JsonResponse($e->getMessage());
+                    // Accéder aux valeurs souhaitées
+                    $code = $data['results'][0]['code'];
+                    $reason = $data['results'][0]['reason'];
+//                    $ticket = $data['results'][0]['ticket'];
+
+                    $historiqueController->create($sender, $tosend, $numero, $code, $reason,
+                    $entityManager);
+                    if($code == 0){
+                        $user->setTotalSMS($user->getTotalSMS() - 1);
+                        $user->setUsedSMS($user->getUsedSMS() + 1);
+                        $entityManager->persist($user);
+                        $entityManager->flush();
+                    }
+                }catch (\Exception $e){
+                    return new JsonResponse([false, $e->getMessage()]);
+                }
             }
+            return new JsonResponse('true');
         }
-        return new JsonResponse('done');
     }
 }
