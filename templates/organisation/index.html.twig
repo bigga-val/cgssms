@@ -31,10 +31,23 @@
                         <td>{{ organisation.rccm }}</td>
                         <td>{{ organisation.idnat }}</td>
                         <td>{{ organisation.adresse }}</td>
-                        <td>{{ organisation.expediteur }}</td>
                         <td>
-                            <a href="{{ path('app_organisation_show', {'id': organisation.id}) }}">show</a>
-                            <a href="{{ path('app_organisation_edit', {'id': organisation.id}) }}">edit</a>
+                            {% if organisation.isApproved %}
+                            <span class="text-success">Approuve</span>
+                            {% else %}
+                                <span class="text-info">Attente</span>
+                            {% endif %}
+                        </td>
+                        <td>
+                            <a class="btn btn-primary btn-sm" href="{{ path('app_organisation_show', {'id': organisation.id}) }}">Details</a>
+                            <a class="btn btn-primary btn-sm" href="{{ path('app_organisation_edit', {'id': organisation.id}) }}">Modifier</a>
+                            {% if is_granted("ROLE_ADMIN") %}
+                                {% if organisation.isApproved %}
+                                    <a class="btn btn-sm btn-outline-danger" href="{{ path('app_organisation_disapprove', {'id': organisation.id}) }}">Approuver</a>
+                                {% else %}
+                                    <a class="btn btn-sm btn-info" href="{{ path('app_organisation_approve', {'id': organisation.id}) }}">Despprouver</a>
+                                {% endif %}
+                            {% endif %}
                         </td>
                     </tr>
                 {% else %}

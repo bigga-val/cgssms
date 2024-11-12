@@ -35,6 +35,9 @@ class Organisation
     #[ORM\JoinColumn(nullable: false)]
     private ?User $user = null;
 
+    #[ORM\Column(nullable: true)]
+    private ?bool $isApproved = null;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -120,6 +123,18 @@ class Organisation
     public function setUser(?User $user): static
     {
         $this->user = $user;
+
+        return $this;
+    }
+
+    public function isApproved(): ?bool
+    {
+        return $this->isApproved;
+    }
+
+    public function setApproved(?bool $isApproved): static
+    {
+        $this->isApproved = $isApproved;
 
         return $this;
     }

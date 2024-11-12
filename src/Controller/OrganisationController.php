@@ -78,6 +78,31 @@ final class OrganisationController extends AbstractController
         ]);
     }
 
+
+    #[Route('/{id}/approve', name: 'app_organisation_approve', methods: ['GET', 'POST'])]
+    public function approve(Request $request, Organisation $organisation, EntityManagerInterface $entityManager): Response
+    {
+        //dd($organisation);
+        if($this->isGranted("ROLE_ADMIN")){
+            $organisation->setApproved(true);
+            $entityManager->persist($organisation);
+            $entityManager->flush();
+        }
+        return $this->redirectToRoute('app_organisation_index', [], Response::HTTP_SEE_OTHER);
+    }
+
+    #[Route('/{id}/disapprove', name: 'app_organisation_disapprove', methods: ['GET', 'POST'])]
+    public function disapprove(Request $request, Organisation $organisation, EntityManagerInterface $entityManager): Response
+    {
+        //dd($organisation);
+        if($this->isGranted("ROLE_ADMIN")){
+            $organisation->setApproved(false);
+            $entityManager->persist($organisation);
+            $entityManager->flush();
+        }
+        return $this->redirectToRoute('app_organisation_index', [], Response::HTTP_SEE_OTHER);
+    }
+
     #[Route('/{id}', name: 'app_organisation_delete', methods: ['POST'])]
     public function delete(Request $request, Organisation $organisation, EntityManagerInterface $entityManager): Response
     {

@@ -18,13 +18,13 @@ final class HistoriqueController extends AbstractController
     public function index(Request $request, HistoriqueRepository $historiqueRepository): Response
     {
         if(!$this->isGranted('ROLE_ADMIN')){
-            $historiques = $historiqueRepository->findBy(['user'=>$this->getUser()]);
+            $historiques = $historiqueRepository->findBy(['user'=>$this->getUser()], ['date'=>'DESC']);
         }else{
             $userID = $request->get("userID");
             if($userID != null){
-                $historiques = $historiqueRepository->findBy(['user'=>$userID]);
+                $historiques = $historiqueRepository->findBy(['user'=>$userID], ['date' => 'DESC']);
             }else{
-                $historiques = $historiqueRepository->findAll();
+                $historiques = $historiqueRepository->findBy([],['date'=>'DESC']);
             }
         }
         return $this->render('historique/index.html.twig', [

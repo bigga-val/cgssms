@@ -21,10 +21,13 @@ use Symfony\Component\Validator\Constraints\Length;
 
 class HomeController extends AbstractController
 {
-    #[Route('/', name: 'app_home')]
+    #[Route('/dashboard', name: 'app_home')]
     public function index(
         ContactRepository $contactRepository,
-        GroupeRepository  $groupeRepository, TemplatesmsRepository $templateRepository, HistoriqueRepository $historiqueRepository,
+        GroupeRepository  $groupeRepository,
+        TemplatesmsRepository $templateRepository,
+        HistoriqueRepository $historiqueRepository,
+        OrganisationRepository $organisationRepository,
     ): Response
     {
         if(!$this->getUser()){
@@ -34,11 +37,15 @@ class HomeController extends AbstractController
             $historiques = $historiqueRepository->findBy([], ['date' => 'DESC'], 5);
             $contacts = $contactRepository->findContacts(true);
             $groupes = $groupeRepository->findGroupes();
+            $organisations = $organisationRepository->findAll();
+
         }else{
             $historiques = $historiqueRepository->findBy(['user'=>$this->getUser()], ['date' => 'DESC'], 5);
 
             $contacts = $contactRepository->findContactsByUser($this->getUser()->getId());
             $groupes = $groupeRepository->findGroupesByUser($this->getUser()->getId());
+            $organisations = $organisationRepository->findBy(["user"=>$this->getUser()]);
+
         }
 
         //dd($contacts, count($contacts), $groupes, count($groupes));
@@ -48,8 +55,19 @@ class HomeController extends AbstractController
             'contacts' => count($contacts),
             'groupes' => count($groupes),
             'historiques' => $historiques,
+            'organisations' => $organisations,
         ]);
     }
+
+    #[Route('/', name: 'app_landing')]
+    public function landing(): Response
+    {
+                //dd($contacts, count($contacts), $groupes, count($groupes));
+
+        return $this->render('home/landing.html.twig', [
+        ]);
+    }
+
 
     #[Route('/envoi', name: 'app_envoi_sms')]
     public function envoi(Request $request,
@@ -139,10 +157,17 @@ class HomeController extends AbstractController
                                    ContactRepository $contactRepository,
                                    HistoriqueController $historiqueController,
                                     UserRepository $userRepository,
+                                    OrganisationRepository $organisationRepository,
     ): Response
     {
         $message = $request->get("message");
-        $sender = 'mulykap';//$request->get("sender");
+        //$sender = 'mulykap';//$request->get("sender");
+        $sender = $request->get("expediteur");
+        if($sender != null && $sender != -1){
+            $sender = $organisationRepository->find($sender)->getDesignation();
+        }else{
+            $sender = 'infosms';
+        }
         $numero = $request->get("numero");
 
         $message = str_replace(' ', '+', $message);
@@ -175,11 +200,17 @@ class HomeController extends AbstractController
                                      EntityManagerInterface $entityManager,
                                     ContactRepository $contactRepository,
                                     HistoriqueController $historiqueController,
+                                    OrganisationRepository $organisationRepository,
     UserRepository $userRepository,
     ): JsonResponse
     {
         $message = $request->get("message");
-        $sender = 'mulykap';//$request->get("sender");
+        $organisation = $organisationRepository->find($request->get("expID"));
+        $sender = 'infosms';
+        if($organisation->getisApproved()){
+            $sender = $organisation->getDesignation();
+        }
+        //$sender = 'mulykap';//$request->get("sender");
         $groupeID = $request->get("groupeID");
         $contacts = $contactRepository->findBy(['groupe'=>$groupeID]);
 
@@ -196,16 +227,16 @@ class HomeController extends AbstractController
                 try {
                 $tosend = $message;
                 if (str_contains($tosend, '[Nom]')) {
-                    $tosend = str_replace('[Nom]', $contact->getNom().' 1', $tosend);
+                    $tosend = str_replace('[Nom]', $contact->getNom(), $tosend);
                 }
                 if (str_contains($tosend, '[Postnom]')) {
-                    $tosend = str_replace('[Postnom]', $contact->getPostnom().' 2', $tosend);
+                    $tosend = str_replace('[Postnom]', $contact->getPostnom(), $tosend);
                 }
                 if (str_contains($tosend, '[Adresse]')) {
-                    $tosend = str_replace('[Adresse]', $contact->getAdresse().' 3', $tosend);
+                    $tosend = str_replace('[Adresse]', $contact->getAdresse(), $tosend);
                 }
                 if (str_contains($tosend, '[Fonction]')) {
-                    $tosend = str_replace('[Fonction]', $contact->getFonction().' 4', $tosend);
+                    $tosend = str_replace('[Fonction]', $contact->getFonction(), $tosend);
                 }
                 $tosend = str_replace(' ', '+', $tosend);
                 $numero = '%2b243'.substr($contact->getTelephone(), -9);

@@ -5,11 +5,11 @@
 {% block body %}
     <div class="login-box">
         <div class="login-logo">
-            <a href=""><b>CGS</b>sms</a>
+            <a href=""><b>In</b>-SMS</a>
         </div>
 
             <div class="card">
-                <div class="card-header bg-info">
+                <div class="card-header bg-dark">
                     <h4>Creer un compte</h4>
                 </div>
                 <div class="card-body">
@@ -40,7 +40,8 @@
 
 {#                        {{ form_row(registrationForm.agreeTerms) }}#}
 
-                        <button type="submit" class="btn btn-info">Register</button>
+                        <button type="submit" class="btn btn-info">S'inscrire</button>
+                        <span>Deja un compte? <a href="{{ path("app_login") }}">Se connecter</a></span>
                     {{ form_end(registrationForm) }}
                 </div>
             </div>
