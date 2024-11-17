@@ -1,0 +1,89 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Accueil In-SMS{% endblock %}
+
+{% block body %}
+
+
+    <div class="container-fluid">
+        <div class="row">
+
+            <div class="col-lg-6">
+                <div class="card">
+                    <div class="card-header">
+                        <h3>Infos personnelles
+                        </h3>
+                    </div>
+                    <div class="card-body">
+                        <form>
+                            <div class="form-group">
+                                <label for="prix">Votre Email</label>
+                                <input value="{{ app.user.email }}" type="text" class="form-control" id="email">
+                            </div>
+                            <div class="form-group">
+                                <label for="quatelephonentite">Votre Téléphone</label>
+                                <input value="{{ app.user.telephone }}" type="number" name="telephone" id="telephone" placeholder="Entrez votre numero de telephone" class="form-control">
+                            </div>
+                            <div class="form-group">
+                                <span class="alert alert-default-warning p-2">
+                                    Validez la commande si ces informations sont correctes
+                                </span>
+                                <br>
+
+                                <button class="btn btn-outline-success mt-2">Modifier</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-6">
+                <div class="card">
+                    <div class="card-header bg-gradient-dark">
+                        <h3>Confirmer ma commande
+                        </h3>
+                    </div>
+                    <div class="card-body">
+                        <form method="GET" action="{{ path("app_new_commande") }}">
+                            <div class="form-group">
+                                <label for="prix">Prix ($)</label>
+                                <input readonly value="{{ 0.06 }}" type="text" class="form-control" id="prix" name="prix">
+                            </div>
+                            <div class="form-group">
+                                <label for="quantite">Montant Disponible ($)</label>
+                                <input readonly type="number" value="{{ montant }}" name="montant" id="montant" placeholder="Entrez le montant" class="form-control">
+                            </div>
+                            <div class="form-group">
+                                <h6>
+                                    Quantité :
+                                    <span id="net-total">{{ total }}</span>
+                                    SMS
+                                </h6>
+                            </div>
+                            <div class="form-group">
+                                <button class="btn btn-success">Commander</button>
+                                <a href="{{ path("app_commande") }}" class="btn btn-outline-danger">Annuler</a>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="{{ asset("plugins/jquery/jquery.js") }}"></script>
+
+    <script>
+        $(document).ready(function(e){
+            let montant = $("#montant")
+            let prix = $("#prix")
+            montant.on("keyup", function(e){
+                if($(this).val() !== ""){
+                    let total = parseInt(montant.val()) / parseFloat(prix.val())
+                    $("#net-total").text(total)
+                }else{
+                    $("#net-total").text(0)
+                }
+
+            })
+        })
+    </script>
+{% endblock %}

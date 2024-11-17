@@ -1,14 +1,14 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Contact index{% endblock %}
+{% block title %}Liste des Contacts{% endblock %}
 
 {% block body %}
     <div class="container-fluid">
-        <div class="card-header bg-black">
+        <div class="card-header bg-gradient-dark">
             <h3>Liste des Contacts</h3>
         </div>
         <div class="card-body">
-            <table class="table">
+            <table class="table" id="example1">
                 <thead>
                 <tr>
                     <th>Id</th>
@@ -77,5 +77,14 @@
         </div>
     </div>
 
+    <script src="{{ asset("plugins/jquery/jquery.js") }}"></script>
 
+    <script>
+        $(function () {
+            $("#example1").DataTable({
+                "responsive": true, "lengthChange": false, "autoWidth": false,
+                "buttons": ["csv", "excel", "pdf", "print", "colvis"]
+            }).buttons().container().appendTo('#example1_wrapper .col-md-6:eq(0)');
+        })
+    </script>
 {% endblock %}

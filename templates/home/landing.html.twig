@@ -347,13 +347,19 @@
             </div><!-- End Section Title -->
 
             <div class="container">
+                <div class="row g-12 mb-3">
+                    <div class="col-12">
+                        <p class="text-center font-weight-bolder">0.06 $ / SMS </p>
+                    </div>
 
+                </div>
                 <div class="row g-4 g-lg-0">
 
                     <div class="col-lg-4" data-aos="zoom-in" data-aos-delay="100">
                         <div class="pricing-item">
-                            <h3>Pack Mini</h3>
-                            <h4><sup>$</sup>5<span> / 100 SMS</span></h4>
+                            <h3>Pack Mini </h3>
+                            <h4><sup>$</sup>6<span> / 100 SMS</span></h4>
+                            <h5 class="text-decoration-line-through">$ 8.5 / 100 SMS</h5>
 {#                            <ul>#}
 {#                                <li><i class="bi bi-check"></i> <span>Quam adipiscing vitae proin</span></li>#}
 {#                                <li><i class="bi bi-check"></i> <span>Nec feugiat nisl pretium</span></li>#}
@@ -361,14 +367,16 @@
 {#                                <li class="na"><i class="bi bi-x"></i> <span>Pharetra massa massa ultricies</span></li>#}
 {#                                <li class="na"><i class="bi bi-x"></i> <span>Massa ultricies mi quis hendrerit</span></li>#}
 {#                            </ul>#}
-                            <div class="text-center"><a href="#" class="buy-btn">Commander</a></div>
+                            <div class="text-center"><a href="{{ path("app_confirmer", {prix:0.06, montant:6}) }}" class="buy-btn">Commander</a></div>
                         </div>
                     </div><!-- End Pricing Item -->
 
                     <div class="col-lg-4 featured" data-aos="zoom-in" data-aos-delay="200">
                         <div class="pricing-item">
                             <h3>Pack Midi</h3>
-                            <h4><sup>$</sup>25<span> / 500 SMS</span></h4>
+                            <h4><sup>$</sup>30<span> / 500 SMS</span></h4>
+                            <h5 class="text-decoration-line-through">$ 42.5 / 500 SMS</h5>
+
 {#                            <ul>#}
 {#                                <li><i class="bi bi-check"></i> <span>Quam adipiscing vitae proin</span></li>#}
 {#                                <li><i class="bi bi-check"></i> <span>Nec feugiat nisl pretium</span></li>#}
@@ -376,14 +384,16 @@
 {#                                <li><i class="bi bi-check"></i> <span>Pharetra massa massa ultricies</span></li>#}
 {#                                <li><i class="bi bi-check"></i> <span>Massa ultricies mi quis hendrerit</span></li>#}
 {#                            </ul>#}
-                            <div class="text-center"><a href="#" class="buy-btn">Commander</a></div>
+                            <div class="text-center"><a href={{ path("app_confirmer", {prix:0.06, montant:30}) }} class="buy-btn">Commander</a></div>
                         </div>
                     </div><!-- End Pricing Item -->
 
                     <div class="col-lg-4" data-aos="zoom-in" data-aos-delay="100">
                         <div class="pricing-item">
                             <h3>Pack Maxi</h3>
-                            <h4><sup>$</sup>100<span> / 2000 SMS</span></h4>
+                            <h4><sup>$</sup>150<span> / 2500 SMS</span></h4>
+                            <h5 class="text-decoration-line-through">$ 212.5 / 2500 SMS</h5>
+
 {#                            <ul>#}
 {#                                <li><i class="bi bi-check"></i> <span>Quam adipiscing vitae proin</span></li>#}
 {#                                <li><i class="bi bi-check"></i> <span>Nec feugiat nisl pretium</span></li>#}
@@ -391,7 +401,7 @@
 {#                                <li><i class="bi bi-check"></i> <span>Pharetra massa massa ultricies</span></li>#}
 {#                                <li><i class="bi bi-check"></i> <span>Massa ultricies mi quis hendrerit</span></li>#}
 {#                            </ul>#}
-                            <div class="text-center"><a href="#" class="buy-btn">Commander</a></div>
+                            <div class="text-center"><a href={{ path("app_confirmer", {prix:0.06, montant:150}) }} class="buy-btn">Commander</a></div>
                         </div>
                     </div><!-- End Pricing Item -->
 
@@ -400,6 +410,21 @@
             </div>
 
         </section><!-- /Pricing Section -->
+        <section id="clients" class="clients section light-background">
+
+            <div class="container">
+                <a href="{{ path("app_commande") }}">
+                <div class="swiper">
+
+                    <div class="swiper-wrappe">
+                        <h3>Pack Personnalisé</h3>
+                        <p class="text-black">Obtenez un pack personnalisé selon votre budjet en cliquant sur ce lien</p>
+                    </div>
+                </div>
+                </a>
+            </div>
+
+        </section><!-- /Clients Section -->
 
 
         <!-- Contact Section -->

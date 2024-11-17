@@ -7,7 +7,7 @@
         <div class="row">
             <div class="col-12">
                 <div class="card">
-                    <div class="card-header bg-black">
+                    <div class="card-header bg-gradient-dark">
                         <h3>Liste des Groupes de contacts</h3>
                     </div>
                     <div class="card-body">
@@ -29,8 +29,9 @@
                                     <td>{{ groupe.totalContact }}</td>
                                     <td>{{ groupe.organisation }}</td>
                                     <td>
-                                        <a href="{{ path('app_groupe_show', {'id': groupe.id}) }}">Details</a>
-                                        <a href="{{ path('app_groupe_edit', {'id': groupe.id}) }}">edit</a>
+                                        <a href="{{ path('app_groupe_show', {'id': groupe.id}) }}" class="btn btn-sm btn-default">Details</a>
+                                        <a href="{{ path('app_groupe_edit', {'id': groupe.id}) }}" class="btn btn-sm btn-default">Edit</a>
+                                        <a href="{{ path('app_groupe_attribuer', {'id': groupe.id}) }}" class="btn btn-sm btn-default">Add Contact</a>
                                     </td>
                                 </tr>
                             {% else %}

@@ -66,6 +66,25 @@ class GroupeRepository extends ServiceEntityRepository
     }
 
 
+    public function findContactNotInGroupeByUser($groupeID, $userID): array
+    {
+        $em = $this->getEntityManager();
+        $query = $em->createQuery(
+            'SELECT c.id contactID, c.telephone, c.nom, c.postnom, c.fonction,  g.id, g.designation, o.id, o.designation 
+                    FROM App\Entity\Contact c, App\Entity\Groupe g, App\Entity\Organisation o
+                    where c.groupe = g.id
+                    and g.organisation = o.id
+                    and o.user = :user
+                    and g.id != :groupeID
+            '
+        );
+        $query->setParameter('user', $userID);
+        $query->setParameter('groupeID', $groupeID);
+        //$query->setParameter('mydate', $mydate->format('Y-m-d'));
+        return $query->getResult();
+    }
+
+
     //    /**
     //     * @return Groupe[] Returns an array of Groupe objects
     //     */

@@ -10,6 +10,7 @@ use App\Repository\OrganisationRepository;
 use App\Repository\TemplatesmsRepository;
 use App\Entity\Templatesms;
 use App\Repository\UserRepository;
+use App\Service\EmailService;
 use Doctrine\ORM\EntityManagerInterface;
 use PHPUnit\Framework\Constraint\Count;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -66,6 +67,30 @@ class HomeController extends AbstractController
 
         return $this->render('home/landing.html.twig', [
         ]);
+    }
+
+    #[Route('/commander', name: 'app_commande')]
+    public function commande(EmailService $emailService): Response
+    {
+        //dd($contacts, count($contacts), $groupes, count($groupes));
+        return $this->render('home/commande.html.twig', [
+
+            ]);
+    }
+
+    #[Route('/confirmer', name: 'app_confirmer')]
+    public function confirmer(Request $request): Response
+    {
+        //dd($contacts, count($contacts), $groupes, count($groupes));
+        $prix = $request->get('prix');
+        $montant = $request->get('montant');
+        $total = intval($montant) / floatval($prix);
+        return $this->render('home/confirmer.html.twig', [
+            "prix"=>$prix,
+            "montant"=>$montant,
+            "total"=>intval($total),
+            "email"=>$this
+            ]);
     }
 
 
@@ -207,7 +232,7 @@ class HomeController extends AbstractController
         $message = $request->get("message");
         $organisation = $organisationRepository->find($request->get("expID"));
         $sender = 'infosms';
-        if($organisation->getisApproved()){
+        if($organisation->isApproved()){
             $sender = $organisation->getDesignation();
         }
         //$sender = 'mulykap';//$request->get("sender");

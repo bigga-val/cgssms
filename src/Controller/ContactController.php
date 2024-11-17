@@ -68,8 +68,19 @@ final class ContactController extends AbstractController
         $contact->setgroupe($groupeRepository->find($request->get('groupeID')));
         $entityManager->persist($contact);
         $entityManager->flush();
+        return new JsonResponse(true);
+    }
 
 
+    #[Route('/JsonAttributeContact', name: 'json_contact_attribute', methods: ['GET', 'POST'])]
+    public function JsonAttributeContact(Request $request, EntityManagerInterface $entityManager,
+                                   GroupeRepository $groupeRepository, contactRepository $contactRepository,
+    ): JsonResponse
+    {
+        $contact = $contactRepository->find($request->query->get('contactID'));
+        $contact->setgroupe($groupeRepository->find($request->query->get('groupeID')));
+        $entityManager->persist($contact);
+        $entityManager->flush();
         return new JsonResponse(true);
     }
 

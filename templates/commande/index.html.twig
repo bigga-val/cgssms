@@ -1,0 +1,61 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Commande index{% endblock %}
+
+{% block body %}
+
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-lg-12">
+
+            <div class="card">
+                <div class="card-header bg-gradient-dark">
+                    <h4>Liste des Commandes</h4>
+                </div>
+                <div class="card-body">
+
+                    <table class="table table-border">
+                        <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>Utilisateur</th>
+                            <th>Telephone</th>
+                            <th>Montant</th>
+                            <th>Prix</th>
+                            <th>Date</th>
+                            <th>actions</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        {% set counter = 0 %}
+                        {% for commande in commandes %}
+                            {% set counter = counter + 1 %}
+
+                            <tr>
+                                <td>{{ counter }}</td>
+                                <td>{{ commande.user.username }}</td>
+                                <td>{{ commande.user.telephone }}</td>
+                                <td>{{ commande.montant }}</td>
+                                <td>{{ commande.prix }}</td>
+                                <td>{{ commande.date ? commande.date|date('d-m-Y H:i:s') : '' }}</td>
+                                <td>
+                                    <a href="{{ path('app_commande_show', {'id': commande.id}) }}">show</a>
+                                    <a href="{{ path('app_commande_edit', {'id': commande.id}) }}">edit</a>
+                                </td>
+                            </tr>
+                        {% else %}
+                            <tr>
+                                <td colspan="5">no records found</td>
+                            </tr>
+                        {% endfor %}
+                        </tbody>
+                    </table>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+    <a href="{{ path('app_commande_new') }}">Create new</a>
+{% endblock %}

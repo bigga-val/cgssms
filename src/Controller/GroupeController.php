@@ -95,6 +95,20 @@ final class GroupeController extends AbstractController
         ]);
     }
 
+    #[Route('/attribuer/{id}', name: 'app_groupe_attribuer', methods: ['GET'])]
+    public function attribuer(Groupe $groupe, ContactRepository $contactRepository,
+        GroupeRepository $groupeRepository
+    ): Response
+    {
+        $contacts = $contactRepository->findBy(['groupe' => $groupe]);
+        $allcontacts = $groupeRepository->findContactNotInGroupeByUser($groupe->getId(), $this->getUser());
+        return $this->render('groupe/attribuer.html.twig', [
+            'groupe' => $groupe,
+            'contacts' => $contacts,
+            'allcontacts'=> $allcontacts,
+        ]);
+    }
+
     #[Route('/{id}/edit', name: 'app_groupe_edit', methods: ['GET', 'POST'])]
     public function edit(Request $request, Groupe $groupe, EntityManagerInterface $entityManager): Response
     {
