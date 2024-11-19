@@ -148,6 +148,7 @@
                         <thead>
                         <tr>
                             <td>Date</td>
+                            <td>Dest</td>
                             <td>Numero</td>
                             <td>Message</td>
                             <td>Resulat</td>
@@ -158,6 +159,7 @@
                         {% for historique in historiques %}
                         <tr>
                             <td>{{ historique.date | format_datetime() }}</td>
+                            <td>{{ historique.sender }}</td>
                             <td>{{ historique.numero | replace({'%2b': '+'}) }}</td>
                             <td>{{ historique.message | replace({'+': ' '}) }}</td>
                             <td>{{ historique.ticket }}</td>
