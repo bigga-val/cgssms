@@ -56,6 +56,7 @@ final class HistoriqueController extends AbstractController
         EntityManagerInterface $entityManager
     ): void{
         $historique = new Historique();
+        $historique->setSender($sender);
         $historique->setUser($this->getUser());
         $historique->setMessage($message);
         $historique->setDate(new \DateTime());

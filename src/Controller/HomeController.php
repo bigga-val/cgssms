@@ -188,11 +188,12 @@ class HomeController extends AbstractController
         $message = $request->get("message");
         //$sender = 'mulykap';//$request->get("sender");
         $sender = $request->get("expediteur");
-        if($sender != null && $sender != -1){
+        if($sender != null && $sender != -1 && $organisationRepository->find($sender)->isApproved()){
             $sender = $organisationRepository->find($sender)->getDesignation();
         }else{
             $sender = 'infosms';
         }
+        //dd($sender);
         $numero = $request->get("numero");
 
         $message = str_replace(' ', '+', $message);
@@ -266,7 +267,7 @@ class HomeController extends AbstractController
                 $tosend = str_replace(' ', '+', $tosend);
                 $numero = '%2b243'.substr($contact->getTelephone(), -9);
                 $response = $this->envoyer($numero, $tosend, $sender);
-                    $data = json_decode($response, true);
+                $data = json_decode($response, true);
 
                     // Accéder aux valeurs souhaitées
                     $code = $data['results'][0]['code'];
