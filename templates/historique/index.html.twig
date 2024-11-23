@@ -16,7 +16,8 @@
                         <tr>
                             <th>#</th>
                             <th>Date</th>
-                            <th>Dest</th>
+                            <th>Par</th>
+                            <th>Sender</th>
                             <th>Numero</th>
                             <th>Message</th>
                             <th>Ticket</th>
@@ -30,6 +31,7 @@
                             <tr>
                                 <td>{{ counter }}</td>
                                 <td>{{ historique.date | format_datetime() }}</td>
+                                <td>{{ historique.user.username }}</td>
                                 <td>{{ historique.sender }}</td>
                                 <td>{{ historique.numero | replace({'%2b': '+'}) }}</td>
                                 <td>{{ historique.message | replace({'+': ' '}) }}</td>

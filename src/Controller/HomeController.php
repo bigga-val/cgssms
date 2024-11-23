@@ -191,7 +191,7 @@ class HomeController extends AbstractController
         if($sender != null && $sender != -1 && $organisationRepository->find($sender)->isApproved()){
             $sender = $organisationRepository->find($sender)->getDesignation();
         }else{
-            $sender = 'infosms';
+            $sender = 'insoft';
         }
         //dd($sender);
         $numero = $request->get("numero");
@@ -232,7 +232,7 @@ class HomeController extends AbstractController
     {
         $message = $request->get("message");
         $organisation = $organisationRepository->find($request->get("expID"));
-        $sender = 'infosms';
+        $sender = 'insoft';
         if($organisation->isApproved()){
             $sender = $organisation->getDesignation();
         }
