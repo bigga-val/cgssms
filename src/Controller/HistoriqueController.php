@@ -17,6 +17,9 @@ final class HistoriqueController extends AbstractController
     #[Route(name: 'app_historique_index', methods: ['GET'])]
     public function index(Request $request, HistoriqueRepository $historiqueRepository): Response
     {
+        if(!$this->getUser()){
+            return $this->redirectToRoute('app_login');
+        }
         if(!$this->isGranted('ROLE_ADMIN')){
             $historiques = $historiqueRepository->findBy(['user'=>$this->getUser()], ['date'=>'DESC']);
         }else{
@@ -35,6 +38,9 @@ final class HistoriqueController extends AbstractController
     #[Route('/new', name: 'app_historique_new', methods: ['GET', 'POST'])]
     public function new(Request $request, EntityManagerInterface $entityManager): Response
     {
+        if(!$this->getUser()){
+            return $this->redirectToRoute('app_login');
+        }
         $historique = new Historique();
         $form = $this->createForm(HistoriqueType::class, $historique);
         $form->handleRequest($request);
@@ -71,6 +77,9 @@ final class HistoriqueController extends AbstractController
     #[Route('/{id}', name: 'app_historique_show', methods: ['GET'])]
     public function show(Historique $historique): Response
     {
+        if(!$this->getUser()){
+            return $this->redirectToRoute('app_login');
+        }
         return $this->render('historique/show.html.twig', [
             'historique' => $historique,
         ]);
@@ -79,6 +88,9 @@ final class HistoriqueController extends AbstractController
     #[Route('/{id}/edit', name: 'app_historique_edit', methods: ['GET', 'POST'])]
     public function edit(Request $request, Historique $historique, EntityManagerInterface $entityManager): Response
     {
+        if(!$this->getUser()){
+            return $this->redirectToRoute('app_login');
+        }
         $form = $this->createForm(HistoriqueType::class, $historique);
         $form->handleRequest($request);
 
@@ -97,6 +109,9 @@ final class HistoriqueController extends AbstractController
     #[Route('/{id}', name: 'app_historique_delete', methods: ['POST'])]
     public function delete(Request $request, Historique $historique, EntityManagerInterface $entityManager): Response
     {
+        if(!$this->getUser()){
+            return $this->redirectToRoute('app_login');
+        }
         if ($this->isCsrfTokenValid('delete'.$historique->getId(), $request->getPayload()->getString('_token'))) {
             $entityManager->remove($historique);
             $entityManager->flush();

@@ -72,6 +72,9 @@ class HomeController extends AbstractController
     #[Route('/commander', name: 'app_commande')]
     public function commande(EmailService $emailService): Response
     {
+        if(!$this->getUser()){
+            return $this->redirectToRoute('app_login');
+        }
         //dd($contacts, count($contacts), $groupes, count($groupes));
         return $this->render('home/commande.html.twig', [
 
@@ -81,6 +84,9 @@ class HomeController extends AbstractController
     #[Route('/confirmer', name: 'app_confirmer')]
     public function confirmer(Request $request): Response
     {
+        if(!$this->getUser()){
+            return $this->redirectToRoute('app_login');
+        }
         //dd($contacts, count($contacts), $groupes, count($groupes));
         $prix = $request->get('prix');
         $montant = $request->get('montant');
@@ -102,6 +108,9 @@ class HomeController extends AbstractController
 
     ): Response
     {
+        if(!$this->getUser()){
+            return $this->redirectToRoute('app_login');
+        }
         if($this->isGranted('ROLE_ADMIN')){
             $organisations = $organisationRepository->findAll();
             $templates = $templatesmsRepository->findAll();
@@ -120,6 +129,9 @@ class HomeController extends AbstractController
     #[Route('/envoyer', name: 'app_envoyer_sms')]
     public function envoyer($numero, $message, $sender)
     {
+        if(!$this->getUser()){
+            return $this->redirectToRoute('app_login');
+        }
             try {
                 //$destinataire = "";
                 //$message = "";
@@ -176,6 +188,15 @@ class HomeController extends AbstractController
         return new JsonResponse([$request->get("titre"), $request->get("texte")]);
     }
 
+    #[Route('/unauthorized', name: 'app_unauthorized', methods: ['GET'])]
+    public function unauthorized(Request $request,
+                                     EntityManagerInterface $entityManager
+    ): Response
+    {
+
+        return $this->render('home/unauthorized.html.twig', []);
+    }
+
     #[Route('/EnvoiRapideSMS', name: 'EnvoiRapideSMS', methods: ['GET'])]
     public function EnvoiRapideSMS(Request $request,
                                    EntityManagerInterface $entityManager,
@@ -220,6 +241,8 @@ class HomeController extends AbstractController
         return $this->redirectToRoute('app_home');
 
     }
+
+
 
     #[Route('/JsonEnvoyerSMS', name: 'JsonEnvoyerSMS', methods: ['GET'])]
     public function JsonEnvoyerSMS(Request $request,

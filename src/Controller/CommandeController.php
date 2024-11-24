@@ -19,6 +19,9 @@ final class CommandeController extends AbstractController
     #[Route(name: 'app_commande_index', methods: ['GET'])]
     public function index(CommandeRepository $commandeRepository): Response
     {
+        if(!$this->getUser()){
+            return $this->redirectToRoute('app_login');
+        }
         return $this->render('commande/index.html.twig', [
             'commandes' => $commandeRepository->findAll(),
         ]);
@@ -27,6 +30,9 @@ final class CommandeController extends AbstractController
     #[Route('/new', name: 'app_commande_new', methods: ['GET', 'POST'])]
     public function new(Request $request, EntityManagerInterface $entityManager): Response
     {
+        if(!$this->getUser()){
+            return $this->redirectToRoute('app_login');
+        }
         $commande = new Commande();
         $form = $this->createForm(CommandeType::class, $commande);
         $form->handleRequest($request);
@@ -47,6 +53,9 @@ final class CommandeController extends AbstractController
     #[Route('/new_commande', name: 'app_new_commande', methods: ['GET', 'POST'])]
     public function new_commande(Request $request, EntityManagerInterface $entityManager, EmailService $emailService): Response
     {
+        if(!$this->getUser()){
+            return $this->redirectToRoute('app_login');
+        }
         $commande = new Commande();
         $commande->setDate(new \DateTime());
         $commande->setUser($this->getUser());
@@ -64,6 +73,9 @@ final class CommandeController extends AbstractController
     #[Route('/{id}', name: 'app_commande_show', methods: ['GET'])]
     public function show(Commande $commande): Response
     {
+        if(!$this->getUser()){
+            return $this->redirectToRoute('app_login');
+        }
         return $this->render('commande/show.html.twig', [
             'commande' => $commande,
         ]);
@@ -72,6 +84,9 @@ final class CommandeController extends AbstractController
     #[Route('/{id}/edit', name: 'app_commande_edit', methods: ['GET', 'POST'])]
     public function edit(Request $request, Commande $commande, EntityManagerInterface $entityManager): Response
     {
+        if(!$this->getUser()){
+            return $this->redirectToRoute('app_login');
+        }
         $form = $this->createForm(CommandeType::class, $commande);
         $form->handleRequest($request);
 
@@ -90,6 +105,9 @@ final class CommandeController extends AbstractController
     #[Route('/{id}', name: 'app_commande_delete', methods: ['POST'])]
     public function delete(Request $request, Commande $commande, EntityManagerInterface $entityManager): Response
     {
+        if(!$this->getUser()){
+            return $this->redirectToRoute('app_login');
+        }
         if ($this->isCsrfTokenValid('delete'.$commande->getId(), $request->getPayload()->getString('_token'))) {
             $entityManager->remove($commande);
             $entityManager->flush();

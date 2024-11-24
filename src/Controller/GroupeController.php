@@ -23,6 +23,9 @@ final class GroupeController extends AbstractController
     #[Route(name: 'app_groupe_index', methods: ['GET'])]
     public function index(GroupeRepository $groupeRepository): Response
     {
+        if(!$this->getUser()){
+            return $this->redirectToRoute('app_login');
+        }
         if($this->isGranted('ROLE_ADMIN')){
             $groupes = $groupeRepository->findGroupes();
 
@@ -41,6 +44,9 @@ final class GroupeController extends AbstractController
         OrganisationRepository $organisationRepository
     ): Response
     {
+        if(!$this->getUser()){
+            return $this->redirectToRoute('app_login');
+        }
         $groupe = new Groupe();
         $form = $this->createForm(GroupeType::class, $groupe);
         $organisations = $organisationRepository->findBy(['user' => $this->getUser()]);
@@ -66,6 +72,9 @@ final class GroupeController extends AbstractController
         OrganisationRepository $organisationRepository
     ): JsonResponse
     {
+        if(!$this->getUser()){
+            return $this->redirectToRoute('app_login');
+        }
         $groupe = new Groupe();
         $groupe->setActive(true);
         $groupe->setDesignation($request->get('designation'));
@@ -88,6 +97,9 @@ final class GroupeController extends AbstractController
     #[Route('/{id}', name: 'app_groupe_show', methods: ['GET'])]
     public function show(Groupe $groupe, ContactRepository $contactRepository): Response
     {
+        if(!$this->getUser()){
+            return $this->redirectToRoute('app_login');
+        }
         $contacts = $contactRepository->findBy(['groupe' => $groupe]);
         return $this->render('groupe/show.html.twig', [
             'groupe' => $groupe,
@@ -100,6 +112,9 @@ final class GroupeController extends AbstractController
         GroupeRepository $groupeRepository
     ): Response
     {
+        if(!$this->getUser()){
+            return $this->redirectToRoute('app_login');
+        }
         $contacts = $contactRepository->findBy(['groupe' => $groupe]);
         $allcontacts = $groupeRepository->findContactNotInGroupeByUser($groupe->getId(), $this->getUser());
         return $this->render('groupe/attribuer.html.twig', [
@@ -112,6 +127,9 @@ final class GroupeController extends AbstractController
     #[Route('/{id}/edit', name: 'app_groupe_edit', methods: ['GET', 'POST'])]
     public function edit(Request $request, Groupe $groupe, EntityManagerInterface $entityManager): Response
     {
+        if(!$this->getUser()){
+            return $this->redirectToRoute('app_login');
+        }
         $form = $this->createForm(GroupeType::class, $groupe);
         $form->handleRequest($request);
 
@@ -130,6 +148,9 @@ final class GroupeController extends AbstractController
     #[Route('/{id}', name: 'app_groupe_delete', methods: ['POST'])]
     public function delete(Request $request, Groupe $groupe, EntityManagerInterface $entityManager): Response
     {
+        if(!$this->getUser()){
+            return $this->redirectToRoute('app_login');
+        }
         if ($this->isCsrfTokenValid('delete'.$groupe->getId(), $request->getPayload()->getString('_token'))) {
             $entityManager->remove($groupe);
             $entityManager->flush();

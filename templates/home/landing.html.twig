@@ -1,16 +1,15 @@
 {% extends 'base_landing.html.twig' %}
 
-{% block title %}Accueil In-SMS{% endblock %}
+{% block title %} Rapide : La meilleure plate-forme d'envoi des SMS rapidement{% endblock %}
 
 {% block body %}
-
 
     <header id="header" class="header fixed-top">
 
         <div class="topbar d-flex align-items-center">
             <div class="container d-flex justify-content-center justify-content-md-between">
                 <div class="contact-info d-flex align-items-center">
-                    <i class="bi bi-envelope d-flex align-items-center"><a href="mailto:info@insoftware.tech">Info@insoftware.tech</a></i>
+                    <i class="bi bi-envelope d-flex align-items-center"><a href="mailto:info@rapide-sms.com">Info@rapide-sms.com</a></i>
                     <i class="bi bi-phone d-flex align-items-center ms-4"><span>+243 995 053 623</span></i>
                 </div>
                 <div class="social-links d-none d-md-flex align-items-center">
@@ -25,10 +24,10 @@
         <div class="branding d-flex align-items-center">
 
             <div class="container position-relative d-flex align-items-center justify-content-between">
-                <a href="index.html" class="logo d-flex align-items-center">
+                <a href="" class="logo d-flex align-items-center">
                     <!-- Uncomment the line below if you also wish to use an image logo -->
                     <!-- <img src="assets/img/logo.png" alt=""> -->
-                    <h1 class="sitename">In-SMS</h1>
+                    <h1 class="sitename">Rapide-SMS</h1>
                 </a>
 
                 <nav id="navmenu" class="navmenu">
@@ -64,7 +63,7 @@
             <div class="container" data-aos="fade-up" data-aos-delay="100">
                 <div class="row justify-content-start">
                     <div class="col-lg-8">
-                        <h2>Communiquez plus vite, plus loin, plus précisément</h2>
+                        <h2>Créer une campagne SMS personnalisée avec notre Outil d'envoi de SMS professionnel</h2>
                         <p></p>
                         <a href="#tarifs" class="btn-get-started">Tarifs</a>
                     </div>
@@ -94,7 +93,8 @@
                     <div class="col-lg-6 order-2 order-lg-1 content" data-aos="fade-up" data-aos-delay="200">
                         <h3>Gagnez du temps, boostez votre communication. Le SMS simplifié pour tous</h3>
                         <p class="fst-italic">
-                            En click, envoyez des SMS partout en RDC vers tous les reseaux(Vodacom, Airtel, Orange et Africell)
+                            Nous sommes spécialisés dans la fourniture de solutions d'envoi de SMS en masse personnalisées pour les entreprises en RDC. Notre plateforme robuste et fiable vous permet de créer et d'envoyer des campagnes SMS ciblées à votre audience.
+                            Bénéficiez d'un taux de livraison élevé et d'une personnalisation avancée pour maximiser l'impact de vos communications.
                         </p>
                         <ul>
                             <li><i class="bi bi-check-circle"></i> <span>Un tableau de Bord intuitif pour le suivi de vos SMS</span></li>
@@ -275,7 +275,7 @@
         <!-- Call To Action Section -->
         <section id="call-to-action" class="call-to-action section dark-background">
 
-            <img src="assets/img/cta-bg.jpg" alt="">
+            <img src="" alt="">
 
             <div class="container">
                 <div class="row justify-content-center" data-aos="zoom-in" data-aos-delay="100">
@@ -371,15 +371,15 @@
         <section id="clients" class="clients section light-background">
 
             <div class="container">
-                <a href="{{ path("app_commande") }}">
+
                 <div class="swiper">
 
                     <div class="swiper-wrappe">
                         <h3>Pack Personnalisé</h3>
-                        <p class="text-black">Obtenez un pack personnalisé selon votre budjet en cliquant sur ce lien</p>
+                        <p class="text-black">Commandez un pack personnalisé selon votre budjet en cliquant<a class="btn btn-sm btn-outline-danger" href="{{ path("app_commande") }}"> sur ce lien</a></p>
                     </div>
                 </div>
-                </a>
+
             </div>
 
         </section><!-- /Clients Section -->
@@ -419,7 +419,7 @@
                         <div class="info-item d-flex flex-column justify-content-center align-items-center" data-aos="fade-up" data-aos-delay="400">
                             <i class="bi bi-envelope"></i>
                             <h3>Email</h3>
-                            <p>info@insoftware.tech</p>
+                            <p>info@rapide-sms.com</p>
                         </div>
                     </div><!-- End Info Item -->
 
@@ -476,12 +476,12 @@
             <div class="row gy-4">
                 <div class="col-lg-4 col-md-6">
                     <div class="footer-about">
-                        <a href="index.html" class="logo sitename">In-SMS</a>
+                        <a href="" class="logo sitename">Rapide-SMS</a>
                         <div class="footer-contact pt-3">
                             <p>1434 RN39,</p>
                             <p>Kolwezi, Lualaba/RDC</p>
                             <p class="mt-3"><strong>Phone:</strong> <span>+243995053623</span></p>
-                            <p><strong>Email:</strong> <span>info@insoftware.tech</span></p>
+                            <p><strong>Email:</strong> <span>info@rapide-sms.com</span></p>
                         </div>
                         <div class="social-links d-flex mt-4">
                             <a href=""><i class="bi bi-twitter-x"></i></a>
@@ -512,6 +512,7 @@
 {#                        <li><a href="#">Marketing</a></li>#}
 {#                        <li><a href="#">Graphic Design</a></li>#}
                     </ul>
+                    <img class="w-30 h-25" src="{{ asset("landing/assets/img/favicon.png") }}" alt="Rapide-SMS log">
                 </div>
 
 {#                <div class="col-lg-4 col-md-12 footer-newsletter">#}
@@ -529,7 +530,7 @@
         </div>
 
         <div class="container copyright text-center mt-4">
-            <p>© <span>Copyright</span> <strong class="px-1 sitename">In-SMS</strong> <span>All Rights Reserved</span></p>
+            <p>© <span>Copyright</span> <strong class="px-1 sitename"Rapide-SMS</strong> <span>All Rights Reserved</span></p>
             <div class="credits">
                 <!-- All the links in the footer should remain intact. -->
                 <!-- You can delete the links only if you've purchased the pro version. -->

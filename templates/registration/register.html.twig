@@ -5,7 +5,11 @@
 {% block body %}
     <div class="login-box">
         <div class="login-logo">
-            <a href=""><b>In</b>-SMS</a>
+            <div class="login-logo">
+                <a href="{{ path("app_landing") }}">
+                    <img class="img-rounded w-50 " src="{{ asset("rapide-logo.png") }}" alt="Envoi des SMS rapides | SMS en masse">
+                </a>
+            </div>
         </div>
 
             <div class="card">

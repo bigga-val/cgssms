@@ -17,6 +17,9 @@ final class OrganisationController extends AbstractController
     #[Route(name: 'app_organisation_index', methods: ['GET'])]
     public function index(OrganisationRepository $organisationRepository): Response
     {
+        if(!$this->getUser()){
+            return $this->redirectToRoute('app_login');
+        }
         if($this->isGranted("ROLE_ADMIN")){
             $organisations = $organisationRepository->findAll();
 
@@ -33,6 +36,9 @@ final class OrganisationController extends AbstractController
     #[Route('/new', name: 'app_organisation_new', methods: ['GET', 'POST'])]
     public function new(Request $request, EntityManagerInterface $entityManager): Response
     {
+        if(!$this->getUser()){
+            return $this->redirectToRoute('app_login');
+        }
         $organisation = new Organisation();
         $form = $this->createForm(OrganisationType::class, $organisation);
         $form->handleRequest($request);
@@ -55,6 +61,9 @@ final class OrganisationController extends AbstractController
     #[Route('/{id}', name: 'app_organisation_show', methods: ['GET'])]
     public function show(Organisation $organisation): Response
     {
+        if(!$this->getUser()){
+            return $this->redirectToRoute('app_login');
+        }
         return $this->render('organisation/show.html.twig', [
             'organisation' => $organisation,
         ]);
@@ -63,6 +72,9 @@ final class OrganisationController extends AbstractController
     #[Route('/{id}/edit', name: 'app_organisation_edit', methods: ['GET', 'POST'])]
     public function edit(Request $request, Organisation $organisation, EntityManagerInterface $entityManager): Response
     {
+        if(!$this->getUser()){
+            return $this->redirectToRoute('app_login');
+        }
         $form = $this->createForm(OrganisationType::class, $organisation);
         $form->handleRequest($request);
 
@@ -82,6 +94,9 @@ final class OrganisationController extends AbstractController
     #[Route('/{id}/approve', name: 'app_organisation_approve', methods: ['GET', 'POST'])]
     public function approve(Request $request, Organisation $organisation, EntityManagerInterface $entityManager): Response
     {
+        if(!$this->getUser()){
+            return $this->redirectToRoute('app_login');
+        }
         //dd($organisation);
         if($this->isGranted("ROLE_ADMIN")){
             $organisation->setApproved(true);
@@ -94,6 +109,9 @@ final class OrganisationController extends AbstractController
     #[Route('/{id}/disapprove', name: 'app_organisation_disapprove', methods: ['GET', 'POST'])]
     public function disapprove(Request $request, Organisation $organisation, EntityManagerInterface $entityManager): Response
     {
+        if(!$this->getUser()){
+            return $this->redirectToRoute('app_login');
+        }
         //dd($organisation);
         if($this->isGranted("ROLE_ADMIN")){
             $organisation->setApproved(false);
