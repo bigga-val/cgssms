@@ -17,7 +17,7 @@
             <div class="info">
                 <a href="#" class="d-block d-flex">
                     {% if(app.user) %}
-                        <h5>{{ app.user.username | upper }}<span class="badge badge-info ml-3">{{ app.user.totalSMS }} SMS</span></h5>
+                        <h5>{{ app.user.username | upper }}<span class="badge badge-info ml-3"><span id="qty-sms">{{ app.user.totalSMS }}</span> SMS</span></h5>
                     {% endif %}
 
                 </a>

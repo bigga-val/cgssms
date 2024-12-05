@@ -112,7 +112,7 @@
                     <h5>Envoi SMS rapide</h5>
                 </div>
                 <div class="card-body">
-                    <form action="{{ path("EnvoiRapideSMS") }}">
+                    <form id="form-rapide" action="{{ path("EnvoiRapideSMS") }}">
                         <select class="form-control" name="expediteur" id="expediteur">
                             <option value="-1">Choisir un expediteur *</option>
                             {% for organisation in organisations %}
@@ -129,6 +129,8 @@
                         <input type="number" name="numero" class="form-control" placeholder="Num: 0991234567">
                         <br>
                         <textarea name="message" id="" cols="30" rows="" class="form-control" placeholder="Ecrivez le message ici..."></textarea>
+                        <br>
+                        <span id="error-msg"></span>
                         <br>
                         <input id="btn-envoyer" type="submit" class="btn btn-info " value="Envoyer">
                     </form> 
@@ -181,5 +183,18 @@
     <script src="{{ asset("plugins/daterangepicker/daterangepicker.js") }}"></script>
     <script>
         $('#reservation').daterangepicker()
+        $('#btn-envoyer').on('click', function(e){
+            let qty = parseInt($("#qty-sms").text())
+
+            if(qty <= 1){
+                $("#error-msg").text("Quantité insuffisante. Veuillez contacter l'administrateur")
+                    .addClass("text-danger")
+                return false
+            }else{
+                $("#error-msg").text("")
+                    .removeClass("text-danger")
+            }
+
+        })
     </script>
 {% endblock %}

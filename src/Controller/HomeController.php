@@ -13,6 +13,7 @@ use App\Repository\UserRepository;
 use App\Service\EmailService;
 use Doctrine\ORM\EntityManagerInterface;
 use PHPUnit\Framework\Constraint\Count;
+use PHPUnit\Util\Json;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -138,7 +139,8 @@ class HomeController extends AbstractController
                 //$sender = "";
                 $curl = curl_init();
                 curl_setopt_array($curl, array(
-                    CURLOPT_URL => "https://api-2.mtarget.fr/messages?username=vousdabord&password=XJK8H8sDP4X0QoWe0OGebAbzRkgwbq1O&msisdn=" . $numero . "&msg=" . $message . "&sender=" . $sender,
+                    //CURLOPT_URL => "https://api-2.mtarget.fr/messages?username=vousdabord&password=XJK8H8sDP4X0QoWe0OGebAbzRkgwbq1O&msisdn=" . $numero . "&msg=" . $message . "&sender=" . $sender,
+                    CURLOPT_URL => "https://api-2.mtarget.fr/messages?username=insoftwaresarl&password=yelQamHM7rpf&msisdn=" . $numero . "&msg=" . $message . "&sender=" . $sender,
                     CURLOPT_RETURNTRANSFER => true,
                     CURLOPT_ENCODING => "",
                     CURLOPT_MAXREDIRS => 10,
@@ -219,27 +221,36 @@ class HomeController extends AbstractController
 
         $message = str_replace(' ', '+', $message);
         $numero = '%2b243'.substr($numero, -9);
-        $response = $this->envoyer($numero, $message, $sender);
-        $data = json_decode($response, true);
+        $user = $userRepository->find($this->getUser()->getId());
+        if($user->getTotalSMS() == 0){
+            return new JsonResponse("Vous n'avez pas assez de credit.");
+        }else{
+            $response = $this->envoyer($numero, $message, $sender);
+            $data = json_decode($response, true);
 
-        // Accéder aux valeurs souhaitées
-        $code = $data['results'][0]['code'];
-        $reason = $data['results'][0]['reason'];
+            // Accéder aux valeurs souhaitées
+            $code = $data['results'][0]['code'];
+            $reason = $data['results'][0]['reason'];
 //                    $ticket = $data['results'][0]['ticket'];
 
-        $historiqueController->create($sender, $message, $numero, $code, $reason,
-            $entityManager
-        );
-        if($code == 0){
-            $user = $userRepository->find($this->getUser()->getId());
-            $user->setTotalSMS($user->getTotalSMS() - 1);
-            $user->setUsedSMS($user->getUsedSMS() + 1);
-            $entityManager->persist($user);
-            $entityManager->flush();
-        }
-        //dd($response);
-        return $this->redirectToRoute('app_home');
+            $historiqueController->create($sender, $message, $numero, $code, $reason,
+                $entityManager
+            );
+            if($code == 0){
+                $user = $userRepository->find($this->getUser()->getId());
+                $user->setTotalSMS($user->getTotalSMS() - 1);
+                $user->setUsedSMS($user->getUsedSMS() + 1);
+                $entityManager->persist($user);
+                $entityManager->flush();
+                //return new JsonResponse(true);
+                return $this->redirectToRoute('app_home');
 
+            }else{
+                return new JsonResponse("Echec lors de l'envoi de SMS");
+            }
+            //dd($response);
+            //return $this->redirectToRoute('app_home');
+        }
     }
 
 
@@ -269,7 +280,10 @@ class HomeController extends AbstractController
         if(count($contacts)==0){
             return new JsonResponse("Aucun contact trouve");
         }else if(count($contacts) >= $user->getTotalSMS()) {
-            return new JsonResponse("Vous n'avez pas assez de credit.");
+            return new JsonResponse("Vous n'avez pas assez de credit. Veuillez contactez l'administrateur");
+        }else if($user->getTotalSMS() <= 1){
+            return new JsonResponse("Vous n'avez pas assez de credit. Veuillez contactez l'administrateur");
+
         }else{
             $numbers = "";
             foreach ($contacts as $contact) {
@@ -311,5 +325,21 @@ class HomeController extends AbstractController
             }
             return new JsonResponse('true');
         }
+    }
+
+    #[Route('/confirmerCompte', name: 'confirmerCompte', methods: ['GET'])]
+    public function confirmerCompte(Request $request,UserRepository $userRepository){
+        $email = $request->get('email');
+        $username = $request->get('username');
+        $user = $userRepository->findOneBy(['Email'=>$email, 'username'=>$username]);
+
+        if(count($user)==0){
+            if($user->isConfirmer() !== true){
+                $user->setConfirmer(true);
+                $user->setTotalSMS(5);
+                $user->setUsedSMS(0);
+            }
+        }
+        return $this->redirectToRoute("app_login");
     }
 }

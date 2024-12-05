@@ -20,14 +20,22 @@
                     {{ form_errors(registrationForm) }}
 
                     {{ form_start(registrationForm) }}
-
+                    <div id="msg-return" class="form-group">
+                        {% for label, messages in app.flashes %}
+                            {% for message in messages %}
+                                <div class="alert alert-{{ label }}">
+                                    <span>{{ message }}</span>
+                                </div>
+                            {% endfor %}
+                        {% endfor %}
+                    </div>
                         <div class="form-group">
                             <label for="">Nom d'Utilisateur *</label>
                             {{ form_widget(registrationForm.username, {'attr': {'class':'form-control'}}) }}
                         </div>
                     <div class="form-group">
                         <label for="">Email *</label>
-                        {{ form_widget(registrationForm.Email, {'attr': {'class':'form-control', 'required':'true'}}) }}
+                        {{ form_widget(registrationForm.Email, {'attr': {'class':'form-control', 'type':'email', 'required':'true'}}) }}
 
                     </div>
 
@@ -44,7 +52,8 @@
 
 {#                        {{ form_row(registrationForm.agreeTerms) }}#}
 
-                        <button type="submit" class="btn btn-info">S'inscrire</button>
+
+                        <button type="submit" id="btn-register" class="btn btn-info">S'inscrire</button>
                         <span>Deja un compte? <a href="{{ path("app_login") }}">Se connecter</a></span>
                     {{ form_end(registrationForm) }}
                 </div>
@@ -52,7 +61,53 @@
 
 
         </div>
+    <script src="{{ asset("plugins/jquery/jquery.min.js") }}"></script>
+    <script>
+        $(document).ready(function(e){
 
+            $("#btn-register").on('click', function(e){
+                let email = $("#registration_form_Email").val()
+                let username = $("#registration_form_username").val()
+                let pwd = $("#registration_form_plainPassword").val()
+                let pwd2 = $("#registration_form_plainPassword2").val()
+                if(!validateEmail(email)){
+                    $("#msg-return")
+                        .text("Email invalide.")
+                        .addClass("text-danger")
+                    return false
+                }else if(pwd !== pwd2){
+                    $("#msg-return")
+                        .text("Les mots de passe ne sont pas identiques .")
+                        .addClass("text-danger")
+                    return false
+                }
+                $.ajax({
+                    url: 'JsonCheckCredentials?email='+email+'&username='+username,
+                    method: 'GET',
+                    data: {},
+                    success: function (data) {
+                        if(data !== true){
+                            $("#msg-return")
+                                .text(data)
+                                .addClass("text-danger")
+                            return false
+                        }
+
+                    },
+                    error: function () {
+                        alert('Une erreur est survenue. Veuillez contacter votre admin.');
+                        // Autres actions à effectuer en cas d'erreur
+                    }
+                    //let qty = $(this).parent("td").siblings("td").children("input[x-model='item.quantity']")
+                })
+
+            })
+            function validateEmail(email) {
+                const re = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+                return re.test(String(email).toLowerCase());
+            }
+        })
+    </script>
 
 
 {% endblock %}

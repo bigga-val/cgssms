@@ -53,6 +53,9 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column(nullable: true)]
     private ?int $usedSMS = null;
 
+    #[ORM\Column(nullable: true)]
+    private ?bool $confirmer = null;
+
     public function __construct()
     {
         $this->organisations = new ArrayCollection();
@@ -207,6 +210,18 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function setUsedSMS(?int $usedSMS): static
     {
         $this->usedSMS = $usedSMS;
+
+        return $this;
+    }
+
+    public function isConfirmer(): ?bool
+    {
+        return $this->confirmer;
+    }
+
+    public function setConfirmer(?bool $confirmer): static
+    {
+        $this->confirmer = $confirmer;
 
         return $this;
     }
