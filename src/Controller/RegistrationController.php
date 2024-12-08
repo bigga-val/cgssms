@@ -35,6 +35,7 @@ class RegistrationController extends AbstractController
             $user->setEmail($user->getEmail());
             $user->setUsedSMS(0);
             $user->setTotalSMS(5);
+            $user->setDateCreation(new \DateTime());
 
             $entityManager->persist($user);
             $entityManager->flush();
@@ -63,8 +64,6 @@ class RegistrationController extends AbstractController
         }else{
             return  new JsonResponse(true);
         }
-
-
     }
 }
 
