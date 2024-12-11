@@ -11,7 +11,7 @@
                         <h3>Historique des Recharges</h3>
                     </div>
                     <div class="card-body">
-                        <table class="table">
+                        <table class="table datatable">
                             <thead>
                             <tr>
                                 <th>#</th>
@@ -34,7 +34,11 @@
                                     <td>{{ recharge.client }}</td>
                                     <td>{{ recharge.oldQuantite }}</td>
                                     <td>{{ recharge.quantite }}</td>
-                                    <td>{{ recharge.date | format_datetime() }}</td>
+                                    <td>
+                                        {% if recharge.date is not null %}
+                                        {{ recharge.date | format_datetime() }}
+                                        {% endif %}
+                                    </td>
                                     <td>
 {#                                                                                <span class="btn btn-sm btn-primary" id="{{ user.id }}">Recha</span>#}
                                         {#                                        <span class="btn btn-sm btn-primary" id="{{ user.id }}">Recha</span>#}

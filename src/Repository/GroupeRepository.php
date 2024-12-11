@@ -75,7 +75,9 @@ class GroupeRepository extends ServiceEntityRepository
                     where c.groupe = g.id
                     and g.organisation = o.id
                     and o.user = :user
-                    and g.id != :groupeID
+                    and c.id not in (SELECT c2.id from App\Entity\ContactGroupe cg, App\Entity\Contact c2 
+                    where c2.id = cg.contact
+                    and cg.groupe = :groupeID)
             '
         );
         $query->setParameter('user', $userID);

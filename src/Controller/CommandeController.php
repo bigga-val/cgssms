@@ -56,16 +56,22 @@ final class CommandeController extends AbstractController
         if(!$this->getUser()){
             return $this->redirectToRoute('app_login');
         }
-        $commande = new Commande();
-        $commande->setDate(new \DateTime());
-        $commande->setUser($this->getUser());
-        $commande->setPrix($request->get('prix'));
-        $commande->setMontant($request->get('montant'));
-        $entityManager->persist($commande);
-        $entityManager->flush();
-        $body = $emailService->confirmerCommandeBody($this->getUser()->getUserIdentifier());
-        $emailService->sendEmail($this->getUser()->getEmail(),"Commande Envoyée", $body);
-        return $this->redirectToRoute('app_home', [], Response::HTTP_SEE_OTHER);
+        try {
+            $commande = new Commande();
+            $commande->setDate(new \DateTime());
+            $commande->setUser($this->getUser());
+            $commande->setPrix($request->get('prix'));
+            $commande->setMontant($request->get('montant'));
+//            $entityManager->persist($commande);
+//            $entityManager->flush();
+            //dd($this->getUser()->getEmail());
+            $body = $emailService->confirmerCommandeBody($this->getUser()->getUserIdentifier());
+            $emailService->sendEmail($this->getUser()->getEmail(),"Commande Envoyée", $body);
+            return $this->redirectToRoute('app_home', [], Response::HTTP_SEE_OTHER);
+        }catch (Exception $e){
+            return $e->getMessage();
+        }
+
 
     }
 

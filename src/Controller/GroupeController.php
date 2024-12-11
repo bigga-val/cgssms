@@ -5,6 +5,7 @@ namespace App\Controller;
 use App\Entity\Groupe;
 use App\Entity\Organisation;
 use App\Form\GroupeType;
+use App\Repository\ContactGroupeRepository;
 use App\Repository\ContactRepository;
 use App\Repository\GroupeRepository;
 use App\Repository\OrganisationRepository;
@@ -109,13 +110,13 @@ final class GroupeController extends AbstractController
 
     #[Route('/attribuer/{id}', name: 'app_groupe_attribuer', methods: ['GET'])]
     public function attribuer(Groupe $groupe, ContactRepository $contactRepository,
-        GroupeRepository $groupeRepository
+        GroupeRepository $groupeRepository, ContactGroupeRepository $contactGroupeRepository
     ): Response
     {
         if(!$this->getUser()){
             return $this->redirectToRoute('app_login');
         }
-        $contacts = $contactRepository->findBy(['groupe' => $groupe]);
+        $contacts = $contactGroupeRepository->findBy(['groupe' => $groupe]);
         $allcontacts = $groupeRepository->findContactNotInGroupeByUser($groupe->getId(), $this->getUser());
         return $this->render('groupe/attribuer.html.twig', [
             'groupe' => $groupe,

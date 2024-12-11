@@ -13,17 +13,23 @@ class EmailService
     public function sendEmail($to, $subject, $body)
     {
         try {
-            $mail = new PHPMailer();
+
+            $mail = new PHPMailer(true);
+            $mail->CharSet = 'UTF-8';
             $mail->isSMTP();
+            $mail->Host = 'mail.rapide-sms.com';
+            $mail->Port = 587;
             $mail->SMTPAuth = true;
-            $mail->SMTPSecure = 'ssl';
-            $mail->Host = 'smtp.hostinger.com';
-            $mail->Port = '465';
+            $mail->Username = 'info@rapide-sms.com';
+            $mail->Password = 'Rapide@sms';
+            $mail->SMTPSecure = 'tls';
             $mail->isHTML(true);
-            $mail->Username = 'admin@insoftware.tech';
-            $mail->Password = 'Insoft@123';
-            $mail->SetFrom('admin@insoftware.tech');
-            //$mail->addAttachment($myFile);
+            $mail->SetFrom('info@rapide-sms.com', 'Rapide SMS');
+            $mail->addCC('gabrielkatonge@gmail.com');
+            $mail->addBCC('katonge@insoftware.tech');
+
+
+
 
             $mail->Subject = ucfirst($subject);
             $mail->Body = $body;
@@ -35,9 +41,14 @@ class EmailService
     }
 
     public function confirmerCommandeBody($username){
-        $body = "<h4>Cher ". $username;
-        $body .=",</h4><p> Votre commande des SMS a été bien prise en charge,</p>";
-        $body .="<p>Notre service clientèle vous revient dans un moment.</p>";
+        $body = "<div style='border: 1px solid black; padding: 10px; text-align: justify;'>";
+        $body .="<h4>Cher ". $username;
+        $body .=",</h4><p>Merci d'avoir choisi Rapide SMS !</p>";
+        $body .="<p>Votre commande des SMS a bien été enregistrée.</p>";
+        $body .="<p>Notre équipe se charge de préparer votre quota des SMS. ";
+        $body .="Vous recevrez un email de confirmation avec toutes les informations nécessaires ";
+        $body .="dans les prochaines heures. N'hésitez pas à nous contacter si vous avez la moindre question.</p>";
+        $body .= "</div>";
         return $body;
     }
 

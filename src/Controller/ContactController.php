@@ -3,12 +3,15 @@
 namespace App\Controller;
 
 use App\Entity\Contact;
+use App\Entity\ContactGroupe;
 use App\Entity\Groupe;
 use App\Form\ContactType;
+use App\Repository\ContactGroupeRepository;
 use App\Repository\ContactRepository;
 use App\Repository\GroupeRepository;
 use App\Repository\OrganisationRepository;
 use Doctrine\ORM\EntityManagerInterface;
+use PHPUnit\Exception;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -84,13 +87,36 @@ final class ContactController extends AbstractController
     #[Route('/JsonAttributeContact', name: 'json_contact_attribute', methods: ['GET', 'POST'])]
     public function JsonAttributeContact(Request $request, EntityManagerInterface $entityManager,
                                    GroupeRepository $groupeRepository, contactRepository $contactRepository,
+                                    ContactGroupeRepository $contactGroupeRepository
     ): JsonResponse
     {
         $contact = $contactRepository->find($request->query->get('contactID'));
-        $contact->setgroupe($groupeRepository->find($request->query->get('groupeID')));
-        $entityManager->persist($contact);
+        $groupe = $groupeRepository->find($request->query->get('groupeID'));
+        $contactgroupe = new ContactGroupe();
+        $contactgroupe->setContact($contact);
+        $contactgroupe->setGroupe($groupe);
+
+        $entityManager->persist($contactgroupe);
         $entityManager->flush();
         return new JsonResponse(true);
+    }
+
+    #[Route('/JsonDisallocateContact', name: 'json_contact_disallocate', methods: ['GET', 'POST'])]
+    public function JsonDisallocateContact(Request $request, EntityManagerInterface $entityManager,
+                                         GroupeRepository $groupeRepository, contactRepository $contactRepository,
+                                         ContactGroupeRepository $contactGroupeRepository
+    ): JsonResponse
+    {
+        try {
+            $contactgroupe = $contactGroupeRepository->find($request->query->get('contactID'));
+
+            $entityManager->remove($contactgroupe);
+            $entityManager->flush();
+            return new JsonResponse(true);
+        }catch (Exception $e){
+            return new JsonResponse($e->getMessage());
+        }
+
     }
 
     #[Route('/{id}', name: 'app_contact_show', methods: ['GET'])]
