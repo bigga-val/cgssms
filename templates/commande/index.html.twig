@@ -23,7 +23,7 @@
                             <th>Montant</th>
                             <th>Prix</th>
                             <th>Date</th>
-                            <th>actions</th>
+{#                            <th>actions</th>#}
                         </tr>
                         </thead>
                         <tbody>
@@ -38,10 +38,10 @@
                                 <td>{{ commande.montant }}</td>
                                 <td>{{ commande.prix }}</td>
                                 <td>{{ commande.date ? commande.date|date('d-m-Y H:i:s') : '' }}</td>
-                                <td>
-                                    <a href="{{ path('app_commande_show', {'id': commande.id}) }}">show</a>
-                                    <a href="{{ path('app_commande_edit', {'id': commande.id}) }}">edit</a>
-                                </td>
+{#                                <td>#}
+{#                                    <a href="{{ path('app_commande_show', {'id': commande.id}) }}">show</a>#}
+{#                                    <a href="{{ path('app_commande_edit', {'id': commande.id}) }}">edit</a>#}
+{#                                </td>#}
                             </tr>
                         {% else %}
                             <tr>
@@ -57,5 +57,5 @@
     </div>
 </div>
 
-    <a href="{{ path('app_commande_new') }}">Create new</a>
+{#    <a href="{{ path('app_commande_new') }}">Create new</a>#}
 {% endblock %}

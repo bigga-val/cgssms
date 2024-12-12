@@ -22,8 +22,16 @@ final class CommandeController extends AbstractController
         if(!$this->getUser()){
             return $this->redirectToRoute('app_login');
         }
+        $userID = $this->getUser()->getId();
+        if(!$this->isGranted('ROLE_ADMIN')){
+            $commandes = $commandeRepository->findBy(['user'=>$userID], ['date' => 'DESC']);
+
+        }else{
+            $commandes = $commandeRepository->findBy([], ['date' => 'DESC']);
+        }
+
         return $this->render('commande/index.html.twig', [
-            'commandes' => $commandeRepository->findAll(),
+            'commandes' => $commandes
         ]);
     }
 
@@ -62,10 +70,11 @@ final class CommandeController extends AbstractController
             $commande->setUser($this->getUser());
             $commande->setPrix($request->get('prix'));
             $commande->setMontant($request->get('montant'));
-//            $entityManager->persist($commande);
-//            $entityManager->flush();
-            //dd($this->getUser()->getEmail());
-            $body = $emailService->confirmerCommandeBody($this->getUser()->getUserIdentifier());
+            $entityManager->persist($commande);
+            $entityManager->flush();
+            $nbresms = doubleval($request->get('montant') / doubleval($request->get('prix')));
+
+            $body = $emailService->confirmerCommandeBody($this->getUser()->getUserIdentifier(), intval($nbresms));
             $emailService->sendEmail($this->getUser()->getEmail(),"Commande Envoyée", $body);
             return $this->redirectToRoute('app_home', [], Response::HTTP_SEE_OTHER);
         }catch (Exception $e){

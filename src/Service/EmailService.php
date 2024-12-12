@@ -40,25 +40,37 @@ class EmailService
         }
     }
 
-    public function confirmerCommandeBody($username){
-        $body = "<div style='border: 1px solid black; padding: 10px; text-align: justify;'>";
+    public function confirmerCommandeBody($username, $nbresms){
+        $body = "<div style='padding: 10px; text-align: justify;'>";
         $body .="<h4>Cher ". $username;
         $body .=",</h4><p>Merci d'avoir choisi Rapide SMS !</p>";
-        $body .="<p>Votre commande des SMS a bien été enregistrée.</p>";
-        $body .="<p>Notre équipe se charge de préparer votre quota des SMS. ";
+        $body .="<p>Votre commande des ". $nbresms ." SMS a bien été enregistrée.</p>";
+        $body .="<p>Notre équipe se charge de préparer votre quota des SMS.";
         $body .="Vous recevrez un email de confirmation avec toutes les informations nécessaires ";
         $body .="dans les prochaines heures. N'hésitez pas à nous contacter si vous avez la moindre question.</p>";
+        $body .="<p>Cordialement !</p>";
+        $body .="<p>L'équipe commerciale</p>";
         $body .= "</div>";
         return $body;
     }
 
-    public function confirmerCompteBody($username, $email){
-        $body = "<h4>Cher ". $username;
-        $body .=",</h4><p> Vous recevez cet email car vous avez créé un compte sur la meilleure plateforme des SMS en RDC,</p>";
-        $body .="<p>Veuillez confirmer votre compte pour pouvoir bénéficier des 5 SMS gratuits offerts en suivant le lien ci-dessous</p>";
-        $body .="<a href='https://rapide-sms.com/user/confirmerCompte?email=" . $email . "&username='".$username.">Veuillez Cliquer ICI</a>";
-        $body .= "<p>En cas de souci avec votre compte, n'hesitez pas de nous contacter à ce numero : </p>";
-        $body .= "<p>+243 851 331 051</p>";
+    public function confirmerCompteBody($username, $email, $userID){
+        $body = "<h4>Cher(e) ". $username;
+        $body .=",</h4><p> Nous sommes ravis de vous accueillir dans la communauté Rapide SMS, la meilleure plateforme des SMS en RDC</p>";
+        $body .="<p>Pour activer votre compte et accéder à toutes nos fonctionnalités, veuillez cliquer sur le lien suivant :</p>";
+        $body .="<a href='https://rapide-sms.com/confirmer?id=" . $userID ."'>Votre lien unique</a>";
+        $body .= "<p>Une fois votre compte confirmé, vous pourrez :</p><ul>";
+        $body .= "<li>Beneficier des 5 SMS gratuits</li>";
+        $body .= "<li>Envoyer des SMS vers differents reseaux de la RDC sans inquietude(Vodacom, Airtel, Orange et Africell)</li>";
+        $body .= "<li>Faire des envois rapides des SMS avec un seul numero</li>";
+        $body .= "<li>Envoyer des SMS en masse à vos groupes des contacts</li>";
+        $body .= "<li>Uploader votre fichier des numeros et les enregistrer pour des envois futurs</li>";
+        $body .= "</ul><p>N'hésitez pas à nous contacter si vous avez la moindre question.</p>";
+        $body .= "<p>Cordialement !</p>";
+        $body .= "<p>Rapide SMS</p>";
+        $body .= "<p>Telephone: +243 851 331 051</p>";
+
+
         return $body;
     }
 }
