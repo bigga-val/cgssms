@@ -5,7 +5,6 @@ use PHPMailer\PHPMailer\PHPMailer;
 
 class EmailService
 {
-
     public function __construct()
     {
     }
@@ -69,8 +68,22 @@ class EmailService
         $body .= "<p>Cordialement !</p>";
         $body .= "<p>Rapide SMS</p>";
         $body .= "<p>Telephone: +243 851 331 051</p>";
+        return $body;
+    }
 
-
+    public function pwdResetBody($username, $pwdID){
+        $body = "<h4>Cher(e) ". $username;
+        $body .=",</h4><p>Une demande de réinitialisation de mot de passe a été effectuée pour votre compte Rapide SMS</p>";
+        $body .="<p>Pour créer un nouveau mot de passe, veuillez cliquer sur le lien suivant :</p>";
+        $body .="<a href='http://localhost:8009/reset?id=" . $pwdID ."'>Votre lien unique</a>";
+        $body .= "<p>Une fois sur la page, vous pourrez saisir et confirmer votre nouveau mot de passe.</p>";
+        $body .= "<p>Important : </p><ul>";
+        $body .= "<li>Ce lien est valide pendant 1 heure(60 minutes). Passé ce délai, vous devrez refaire une demande de réinitialisation.</li>";
+        $body .= "<li>Ce lien devient valide une fois que le mot de passe est réinitialisé avec succès.</li>";
+        $body .= "<li>Si vous n'êtes pas à l'origine de cette demande, nous vous recommandons de contacter immédiatement notre support client à Info@rapide-sms.com</li>";
+        $body .= "</ul><p>Merci,</p>";
+        $body .= "<p>Rapide SMS</p>";
+        $body .= "<p>Telephone: +243 851 331 051</p>";
         return $body;
     }
 }

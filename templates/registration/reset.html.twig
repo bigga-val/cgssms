@@ -1,0 +1,97 @@
+{% extends 'base2.html.twig' %}
+
+{% block title %}Register{% endblock %}
+
+{% block body %}
+    <div class="container">
+        <div class="row col-12 mt-3">
+            <div class="col-12">
+                <a href="{{ path("app_landing") }}">
+{#                    <img class="img-rounded w-25 " src="{{ asset("rapide-logo.png") }}" alt="Envoi des SMS rapides | SMS en masse">#}
+                </a>
+            </div>
+
+        </div>
+        <div class="row">
+            <div class="">
+                <h1>Réinitialisation du mot de passe</h1>
+                <p class="">Veuillez entrer vos informations pour verification</p>
+                <div class="form-group">
+                    <label for="">Nom d'utilisateur</label>
+                    <input type="text" class="form-control col-8" name="username" id="username">
+                </div>
+                <div class="form-group">
+                    <label for="">Email</label>
+                    <input type="email" class="form-control col-8" name="email" id="email">
+                </div>
+                <p id="p-error"></p>
+                <button class="btn btn- btn-dark" id="btn-verifier">Verifier</button>
+                <br>
+
+                <a href="{{ path("app_landing") }}">Retourner à la page d'Accueil</a>
+            </div>
+
+        </div>
+
+
+
+
+    </div>
+    <script src="{{ asset("plugins/jquery/jquery.min.js") }}"></script>
+    <script>
+        $(document).ready(function(e){
+            $("#btn-verifier").on("click", function(e){
+                let email = $('#email').val()
+                let username = $('#username').val()
+                if( username === "") {
+                    $('#p-error').text("Remplissez ce champ")
+                        .addClass("text-danger")
+                    $('#username').addClass("border border-danger")
+                    $('#email').removeClass("border border-danger")
+                }else if(email === ""){
+                    $("#p-error").text("Remplissez ce champ")
+                        .addClass("text-danger")
+                    $("#email").addClass("border border-danger")
+                    $("#username").removeClass("border border-danger")
+                }else if(!validateEmail(email)){
+                    $("#p-error").text("Email invalide")
+                        .addClass("text-danger")
+                    $("#email").removeClass("border border-danger")
+                }else{
+                    $("#btn-verifier").addClass("disabled")
+                    $("#p-error").text("")
+                    $("#email, #username").removeClass("border border-danger")
+
+                    $.ajax({
+                        url: 'JsonCheckExistentUser?email='+email+'&username='+username,
+                        method: 'GET',
+                        data: {},
+                        success: function (data) {
+
+                            if(data !== true){
+                                // $("#btn-verifier")
+                                //     .hide()
+                                $("#p-error")
+                                    .text("Votre lien de réinitialisation de votre mot de passe a été transféré à votre adresse email avec succès !")
+                                    .addClass("text-success")
+                                return false
+                            }
+                        },
+                        error: function () {
+                            alert('Une erreur est survenue. Veuillez contacter votre admin.');
+                            // Autres actions à effectuer en cas d'erreur
+                        }
+                        //let qty = $(this).parent("td").siblings("td").children("input[x-model='item.quantity']")
+                    })
+                }
+            })
+
+            function validateEmail(email) {
+                const re = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+                return re.test(String(email).toLowerCase());
+            }
+        })
+    </script>
+
+
+{% endblock %}

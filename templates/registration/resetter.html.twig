@@ -1,0 +1,96 @@
+{% extends 'base2.html.twig' %}
+
+{% block title %}Register{% endblock %}
+
+{% block body %}
+    <div class="container">
+        <div class="row col-12 mt-3">
+            <div class="col-12">
+                <a href="{{ path("app_landing") }}">
+{#                    <img class="img-rounded w-25 " src="{{ asset("rapide-logo.png") }}" alt="Envoi des SMS rapides | SMS en masse">#}
+                    <input type="hidden" value="{{ pwdid }}" id="pwdid">
+{#                    <p>{{ date_donnee | format_datetime() }}</p>#}
+{#                    <p>{{ date_actuelle | format_datetime() }}</p>#}
+{#                    <p>{{ result }}</p>#}
+                </a>
+            </div>
+
+        </div>
+        <div class="row">
+            <div class="col-md-12">
+                <h1>Réinitialisation du mot de passe</h1>
+                <p class=""></p>
+                <div class="form-group">
+                    <label for="">Nouveau mot de passe</label>
+                    <input type="text" class="form-control col-8" name="pwd" id="pwd">
+                </div>
+                <div class="form-group">
+                    <label for="">Confirmer le mot de Passe</label>
+                    <input type="text" class="form-control col-8" name="pwd2" id="pwd2">
+                </div>
+                <p id="p-error"></p>
+                <button class="btn btn- btn-dark" id="btn-save">Réinitialiser</button>
+                <br>
+
+                <a href="{{ path("app_landing") }}">Retourner à la page d'Accueil</a>
+
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-12">
+                <a class="btn btn-success" id="btn-login" href="{{ path("app_login") }}">Connexion</a>
+
+            </div>
+        </div>
+
+
+
+
+    </div>
+    <script src="{{ asset("plugins/jquery/jquery.min.js") }}"></script>
+    <script>
+        $(document).ready(function(e){
+            $("#btn-login").hide()
+            $("#btn-save").on("click", function(e){
+                let pwd = $('#pwd').val()
+                let pwd2 = $('#pwd2').val()
+                let pwdid = $('#pwdid').val()
+                if( pwd === "") {
+                    $('#p-error').text("Entrer un mot de passe")
+                        .addClass("text-danger")
+                    $('#pwd').addClass("border border-danger").focus()
+                    $('#pwd2').removeClass("border border-danger")
+                }else if(pwd2 === ""){
+                    $("#p-error").text("Veuillez confirmer votre mot de passe")
+                        .addClass("text-danger")
+                    $("#pwd2").addClass("border border-danger").focus()
+                    $("#pwd").removeClass("border border-danger")
+                }else if(pwd !== pwd2) {
+                    $("#p-error").text("Les mots de passe ne sont pas identiques.").addClass("text-danger")
+                    $("#pwd, #pwd2").removeClass("border border-danger")
+                }else{
+                    $("#btn-save").addClass("disabled")
+                    $.ajax({
+                        url: 'JsonSaveResetPwd?pwd='+pwd+'&pwd2='+pwd2+'&pwdid='+pwdid,
+                        method: 'GET',
+                        data: {},
+                        success: function (data) {
+                            $("#p-error").text(data['msg']).addClass('text-success')
+                            if(data['data'] === true){
+                                $("#btn-login").show()
+                            }
+
+                        },
+                        error: function () {
+                            alert('Une erreur est survenue. Veuillez contacter votre admin.');
+                            // Autres actions à effectuer en cas d'erreur
+                        }
+                        //let qty = $(this).parent("td").siblings("td").children("input[x-model='item.quantity']")
+                    })
+                }
+            })
+        })
+    </script>
+
+
+{% endblock %}
