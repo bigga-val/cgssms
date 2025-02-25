@@ -1,6 +1,6 @@
 {% extends 'base_landing.html.twig' %}
 
-{% block title %} Rapide : La meilleure plate-forme d'envoi des SMS rapidement{% endblock %}
+{% block title %} MSG-PRO : La meilleure plate-forme d'envoi des SMS rapidement{% endblock %}
 
 {% block body %}
 
@@ -9,7 +9,7 @@
         <div class="topbar d-flex align-items-center">
             <div class="container d-flex justify-content-center justify-content-md-between">
                 <div class="contact-info d-flex align-items-center">
-                    <i class="bi bi-envelope d-flex align-items-center"><a href="mailto:info@rapide-sms.com">Info@rapide-sms.com</a></i>
+                    <i class="bi bi-envelope d-flex align-items-center"><a href="mailto:info@rapide-sms.com">Info@msg-pro.com</a></i>
                     <i class="bi bi-phone d-flex align-items-center ms-4"><span>+243 851 331 051</span></i>
                 </div>
                 <div class="social-links d-none d-md-flex align-items-center">
@@ -27,7 +27,7 @@
                 <a href="" class="logo d-flex align-items-center">
                     <!-- Uncomment the line below if you also wish to use an image logo -->
                     <!-- <img src="assets/img/logo.png" alt=""> -->
-                    <h1 class="sitename">Rapide-SMS</h1>
+                    <h1 class="sitename">MSG-PRO</h1>
                 </a>
 
                 <nav id="navmenu" class="navmenu">
@@ -325,7 +325,7 @@
 {#                                <li class="na"><i class="bi bi-x"></i> <span>Pharetra massa massa ultricies</span></li>#}
 {#                                <li class="na"><i class="bi bi-x"></i> <span>Massa ultricies mi quis hendrerit</span></li>#}
 {#                            </ul>#}
-                            <div class="text-center"><a href="{{ path("app_confirmer", {prix:0.06, montant:6}) }}" class="buy-btn">Commander</a></div>
+                            <div class="text-center"><a href="{{ path("app_confirmer_commande", {prix:0.06, montant:6}) }}" class="buy-btn">Commander</a></div>
                         </div>
                     </div><!-- End Pricing Item -->
 
@@ -342,7 +342,7 @@
 {#                                <li><i class="bi bi-check"></i> <span>Pharetra massa massa ultricies</span></li>#}
 {#                                <li><i class="bi bi-check"></i> <span>Massa ultricies mi quis hendrerit</span></li>#}
 {#                            </ul>#}
-                            <div class="text-center"><a href={{ path("app_confirmer", {prix:0.06, montant:30}) }} class="buy-btn">Commander</a></div>
+                            <div class="text-center"><a href={{ path("app_confirmer_commande", {prix:0.06, montant:30}) }} class="buy-btn">Commander</a></div>
                         </div>
                     </div><!-- End Pricing Item -->
 
@@ -359,7 +359,7 @@
 {#                                <li><i class="bi bi-check"></i> <span>Pharetra massa massa ultricies</span></li>#}
 {#                                <li><i class="bi bi-check"></i> <span>Massa ultricies mi quis hendrerit</span></li>#}
 {#                            </ul>#}
-                            <div class="text-center"><a href={{ path("app_confirmer", {prix:0.06, montant:150}) }} class="buy-btn">Commander</a></div>
+                            <div class="text-center"><a href={{ path("app_confirmer_commande", {prix:0.06, montant:150}) }} class="buy-btn">Commander</a></div>
                         </div>
                     </div><!-- End Pricing Item -->
 
@@ -419,7 +419,7 @@
                         <div class="info-item d-flex flex-column justify-content-center align-items-center" data-aos="fade-up" data-aos-delay="400">
                             <i class="bi bi-envelope"></i>
                             <h3>Email</h3>
-                            <p>info@rapide-sms.com</p>
+                            <p>info@msg-pro.com</p>
                         </div>
                     </div><!-- End Info Item -->
 
@@ -476,12 +476,12 @@
             <div class="row gy-4">
                 <div class="col-lg-4 col-md-6">
                     <div class="footer-about">
-                        <a href="" class="logo sitename">Rapide-SMS</a>
+                        <a href="" class="logo sitename">MSG-PRO</a>
                         <div class="footer-contact pt-3">
                             <p>1434 RN39,</p>
                             <p>Kolwezi, Lualaba/RDC</p>
                             <p class="mt-3"><strong>Phone:</strong> <span>+243 851 331 051 </span></p>
-                            <p><strong>Email:</strong> <span>info@rapide-sms.com</span></p>
+                            <p><strong>Email:</strong> <span>info@msg-pro.com</span></p>
                         </div>
                         <div class="social-links d-flex mt-4">
                             <a href=""><i class="bi bi-twitter-x"></i></a>
@@ -512,7 +512,7 @@
 {#                        <li><a href="#">Marketing</a></li>#}
 {#                        <li><a href="#">Graphic Design</a></li>#}
                     </ul>
-                    <img class="w-30 h-25" src="{{ asset("landing/assets/img/favicon.png") }}" alt="Rapide-SMS log">
+                    <img class="w-30 h-25" src="{{ asset("landing/assets/img/favicon.png") }}" alt="MSG-PRO log">
                 </div>
 
 {#                <div class="col-lg-4 col-md-12 footer-newsletter">#}
@@ -530,7 +530,7 @@
         </div>
 
         <div class="container copyright text-center mt-4">
-            <p>© <span>Copyright</span> <strong class="px-1 sitename"Rapide-SMS</strong> <span>All Rights Reserved</span></p>
+            <p>© <span>Copyright</span> <strong class="px-1 sitename"MSG-PRO</strong> <span>All Rights Reserved</span></p>
             <div class="credits">
                 <!-- All the links in the footer should remain intact. -->
                 <!-- You can delete the links only if you've purchased the pro version. -->

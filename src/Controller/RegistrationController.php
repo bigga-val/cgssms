@@ -86,15 +86,13 @@ class RegistrationController extends AbstractController
     {
         $email = $request->get('email');
         $username = $request->get('username');
-        $user = $userRepository->findBy(['Email' => $email, 'username' => $username]);
+        $user = $userRepository->findOneByEmailUsername($email, $username);
 
-        if (count($user) === 0) {
-            return new JsonResponse("Aucun utilisateur éxistant.");
-        } else if (count($user) > 1) {
-            return new JsonResponse("Un problème est survenu. Veuillez contacter votre administrateur.");
+        if ($user == null) {
+            return new JsonResponse(['result'=>false, 'msg'=> 'Aucun utilisateur éxistant.']);
         }else{
             $pwdreset = new PwdResetting();
-            $pwdreset->setUser($user[0]);
+            $pwdreset->setUser($user);
             $pwdreset->setActive(true);
             $pwdreset->setDatecreation(new \DateTime());
             $entityManager->persist($pwdreset);
@@ -102,11 +100,13 @@ class RegistrationController extends AbstractController
 
             //send email when the account is created
             $subject = "Réinitialisation de votre mot de passe";
-            $body = $emailService->pwdResetBody($user[0]->getUsername(), $pwdreset->getId());
-            $emailService->sendEmail($user[0]->getEmail(),$subject, $body);
+            $body = $emailService->pwdResetBody($user->getUsername(), $pwdreset->getId());
+            $emailService->sendEmail($user->getEmail(),$subject, $body);
 //            $emailService->sendEmail("gabrielkatonge@gmail.com",$subject, $body);
 
-            return  new JsonResponse(['data'=>true, 'pwdid'=>$pwdreset->getId()]);
+            return  new JsonResponse(['result'=>true,
+                'msg'=>'Votre lien de réinitialisation de votre mot de passe a été transféré à votre adresse email avec succès !',
+                'pwdid'=>$pwdreset->getId()]);
 
         }
     }

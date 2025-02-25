@@ -51,13 +51,18 @@ class HomeController extends AbstractController
         }
 
         //dd($contacts, count($contacts), $groupes, count($groupes));
-
+        $balance = $this->getBalance();
+        $data = json_decode($balance);
+        $amount = $data->amount;
+        $currency = $data->currency;
+        $myBalance = $amount .' '.$currency;
         return $this->render('home/index.html.twig', [
             'controller_name' => 'HomeController',
             'contacts' => count($contacts),
             'groupes' => count($groupes),
             'historiques' => $historiques,
             'organisations' => $organisations,
+            'myBalance' => $myBalance,
         ]);
     }
 
@@ -82,8 +87,8 @@ class HomeController extends AbstractController
             ]);
     }
 
-    #[Route('/confirmer', name: 'app_confirmer')]
-    public function confirmer(Request $request): Response
+    #[Route('/confirmercommande', name: 'app_confirmer_commande')]
+    public function confirmercommande(Request $request): Response
     {
         if(!$this->getUser()){
             return $this->redirectToRoute('app_login');
@@ -133,36 +138,66 @@ class HomeController extends AbstractController
         if(!$this->getUser()){
             return $this->redirectToRoute('app_login');
         }
-            try {
-                //$destinataire = "";
-                //$message = "";
-                //$sender = "";
-                $curl = curl_init();
-                curl_setopt_array($curl, array(
-                    //CURLOPT_URL => "https://api-2.mtarget.fr/messages?username=vousdabord&password=XJK8H8sDP4X0QoWe0OGebAbzRkgwbq1O&msisdn=" . $numero . "&msg=" . $message . "&sender=" . $sender,
-                    CURLOPT_URL => "https://api-2.mtarget.fr/messages?username=insoftwaresarl&password=yelQamHM7rpf&msisdn=" . $numero . "&msg=" . $message . "&sender=" . $sender,
-                    CURLOPT_RETURNTRANSFER => true,
-                    CURLOPT_ENCODING => "",
-                    CURLOPT_MAXREDIRS => 10,
-                    CURLOPT_TIMEOUT => 30,
-                    CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
-                    CURLOPT_CUSTOMREQUEST => "POST",
-                    //CURLOPT_POSTFIELDS => "username=vousdabord&password=XJK8H8sDP4X0QoWe0OGebAbzRkgwbq1O&msisdn=+243995053623&msg=Message%20simple",
-                    CURLOPT_HTTPHEADER => array(
-                        "content-type: application/x-www-form-urlencoded"
-                    ),
-                ));
-                $response = curl_exec($curl);
-                $err = curl_error($curl);
-                curl_close($curl);
-                //dd("Erreur: ", $err, "Response:", $response);
-                //return $this->redirectToRoute('app_home');
-                return $response ;//. ' || ' . $err;
+        try {
+            //$destinataire = "";
+            //$message = "";
+            //$sender = "";
+            $curl = curl_init();
+            curl_setopt_array($curl, array(
+                //CURLOPT_URL => "https://api-2.mtarget.fr/messages?username=vousdabord&password=XJK8H8sDP4X0QoWe0OGebAbzRkgwbq1O&msisdn=" . $numero . "&msg=" . $message . "&sender=" . $sender,
+                CURLOPT_URL => "https://api-2.mtarget.fr/messages?username=insoftwaresarl&password=yelQamHM7rpf&msisdn=" . $numero . "&msg=" . $message . "&sender=" . $sender,
+                CURLOPT_RETURNTRANSFER => true,
+                CURLOPT_ENCODING => "",
+                CURLOPT_MAXREDIRS => 10,
+                CURLOPT_TIMEOUT => 30,
+                CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+                CURLOPT_CUSTOMREQUEST => "POST",
+                //CURLOPT_POSTFIELDS => "username=vousdabord&password=XJK8H8sDP4X0QoWe0OGebAbzRkgwbq1O&msisdn=+243995053623&msg=Message%20simple",
+                CURLOPT_HTTPHEADER => array(
+                    "content-type: application/x-www-form-urlencoded"
+                ),
+            ));
+            $response = curl_exec($curl);
+            $err = curl_error($curl);
+            curl_close($curl);
+            //dd("Erreur: ", $err, "Response:", $response);
+            //return $this->redirectToRoute('app_home');
+            return $response ;//. ' || ' . $err;
 
-            } catch (Exception $e) {
-                return $e->getMessage();
-            }
+        } catch (Exception $e) {
+            return $e->getMessage();
+        }
 
+    }
+
+    public function getBalance(){
+        $curl = curl_init();
+
+        curl_setopt_array($curl, array(
+            CURLOPT_URL => "https://api-public-2.mtarget.fr/balance",
+            CURLOPT_RETURNTRANSFER => true,
+            CURLOPT_ENCODING => "",
+            CURLOPT_MAXREDIRS => 10,
+            CURLOPT_TIMEOUT => 30,
+            CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+            CURLOPT_CUSTOMREQUEST => "POST",
+            CURLOPT_POSTFIELDS => "username=insoftwaresarl&password=yelQamHM7rpf",
+            CURLOPT_HTTPHEADER => array(
+                "content-type: application/x-www-form-urlencoded"
+            ),
+        ));
+
+        $response = curl_exec($curl);
+        $err = curl_error($curl);
+
+        curl_close($curl);
+
+//        if ($err) {
+//            echo "cURL Error #:" . $err;
+//        } else {
+//            echo $response;
+//        }
+        return $response;
     }
     #[Route('/JsonListGroupsByOrganisation/{id}', name: 'JsonListGroupsByOrganisation', methods: ['GET'])]
     public function JsonListGroupsByOrganisation(Request $request,

@@ -67,14 +67,20 @@
                         method: 'GET',
                         data: {},
                         success: function (data) {
-
-                            if(data !== true){
+                            console.log(data)
+                            if(data['result'] === true){
                                 // $("#btn-verifier")
                                 //     .hide()
                                 $("#p-error")
-                                    .text("Votre lien de réinitialisation de votre mot de passe a été transféré à votre adresse email avec succès !")
+                                    .text(data['msg'])
                                     .addClass("text-success")
                                 return false
+                            }else{
+                                $("#btn-verifier").removeClass("disabled")
+
+                                $("#p-error")
+                                    .text(data['msg'])
+                                    .addClass("text-danger")
                             }
                         },
                         error: function () {

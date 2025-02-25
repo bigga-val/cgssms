@@ -19,8 +19,6 @@
                         {{ include('groupe/_delete_form.html.twig') }}
                     </div>
                 </div>
-
-
                 <div class="card">
                     <div class="card-header bg-gradient-dark">
                         <h4>Importation de fichier de contacts</h4>
@@ -76,7 +74,6 @@
             const file = e.target.files[0]
             const reader = new FileReader()
             const groupeID = {{ groupe.id }}
-
             reader.onload = function(e){
                 let data = e.target.result//new Uint8Array(e.target.result)
                 const workbook = XLSX.read(data, {type: 'array'})
@@ -96,9 +93,7 @@
                         +"<td>" +data[i]['Adresse']+"</td>"
                         +"<td>" +data[i]['Fonction']+"</td></tr>"
                 }
-
                 $("#tbody").html(tbody)
-
                 $('#btn-savexlsx').on('click', function(e){
                     if($('#groupe_designation').val() === ''){
                         console.log('empty')
@@ -110,9 +105,7 @@
                     }else{
                         $('#groupe_designation').removeClass('border border-danger')
                         $('#error-msg').text('')
-
                         let lines = $("#tbody tr")
-
                         for(let i = 0; i < data.length; i++){
                                     //console.log(data[i]['Telephone'], data[i]['Nom'], data[i]['Postnom'], data[i]['Adresse'], data[i]['Fonction'])
                                     $.ajax({
@@ -131,7 +124,6 @@
                                                 //console.log(data[i]['Telephone'], data[i]['Nom'], data[i]['Postnom'], data[i]['Adresse'], data[i]['Fonction'])
                                             }
                                             window.location.replace('{{ path('app_contact_index') }}');
-
                                         },
                                         error: function () {
                                             alert('Erreur lors de la requête AJAX.');

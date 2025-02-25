@@ -17,9 +17,13 @@
                         {% else %}
                             {{ app.user.totalSMS }}
                         {% endif %}
+                        
                     </h3>
 
                     <p>SMS</p>
+                    {% if is_granted('ROLE_ADMIN') %}
+                        {{ myBalance }}
+                    {% endif %}
                 </div>
                 <div class="icon">
                     <i class="ion ion-bag"></i>
