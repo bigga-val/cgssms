@@ -22,9 +22,11 @@
                             </tr>
                             </thead>
                             <tbody>
+                            {% set counter = 0 %}
                             {% for groupe in groupes %}
+                                {% set counter = counter + 1 %}
                                 <tr>
-                                    <td>{{ groupe.id }}</td>
+                                    <td>{{ counter }}</td>
                                     <td>{{ groupe.designation }}</td>
                                     <td>{{ groupe.totalContact }}</td>
                                     <td>{{ groupe.organisation }}</td>

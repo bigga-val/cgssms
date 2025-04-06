@@ -12,6 +12,9 @@
                     </div>
                     <div class="card-body">
 {#                        {{ include('groupe/_form.html.twig') }}#}
+
+                        <p class="alert alert-default-warning m-3 d-block text-black">Vous êtes sur le point de créer des contacts directement liés à un Groupe de Contact. veuillez trouver ci-bas, le modèle excel à remplir et uploader.</p>
+
                         <form action="">
                             <div class="form-group">
                                 <label for="groupe_designation">Designation</label>
@@ -26,7 +29,7 @@
                                 </select>
                             </div>
                             <div class="form-group">
-                                <input type="submit" class="btn btn-success">
+{#                                <input type="submit" class="btn btn-success">#}
                             </div>
                         </form>
                     </div>
@@ -64,7 +67,7 @@
                         </table>
                     </div>
                     <div class="card-footer">
-                        <a href="{{ path('app_groupe_index') }}">Voir la liste</a>
+{#                        <a href="{{ path('app_groupe_index') }}">Voir la liste</a>#}
 
                     </div>
                 </div>
@@ -84,6 +87,7 @@
     <script>
         const result =[]
         const container = document.getElementById('previewTable')
+        $('#btn-savexlsx').attr("disabled", "true")
         $('#excelFileInput').on('change', function(e){
             //container.innerHTML = '<span>No file uploaded</span>'
             //console.log("changed")
@@ -99,23 +103,25 @@
                 //const jsonData = XLSX.utils.sheet_to_json(worksheet, {header:1, range:12, cellDates: true})
                 data = XLSX.utils.sheet_to_json(worksheet);
                 //console.log(workbook, worksheet, sheetName)
-                console.log(data, typeof worksheet)
+                //console.log(data, typeof worksheet)
                 let tbody = ""
                 for(let i = 0; i < data.length; i++){
-                    console.log(data[i]['Telephone'], data[i]['Nom'], data[i]['Postnom'], data[i]['Adresse'], data[i]['Fonction'])
+                    //console.log(data[i]['Telephone'], data[i]['Nom'], data[i]['Postnom'], data[i]['Adresse'], data[i]['Fonction'])
                     tbody += "<tr><td>" +data[i]['Telephone']+"</td>"
                         +"<td>" +data[i]['Nom']+"</td>"
                         +"<td>" +data[i]['Postnom']+"</td>"
                         +"<td>" +data[i]['Adresse']+"</td>"
                         +"<td>" +data[i]['Fonction']+"</td></tr>"
                 }
+                $('#btn-savexlsx').removeAttr("disabled")
+
 
                 $("#tbody").html(tbody)
 
                 $('#btn-savexlsx').on('click', function(e){
-                    console.log('clicked')
+                  //  console.log('clicked')
                     if($('#groupe_designation').val() === ''){
-                        console.log('empty')
+                    //    console.log('empty')
                         $('#groupe_designation').addClass('border border-danger')
                         $('#error-msg').text('La designation du groupe de contact est encore vide')
                     }else if($('#tbody').find('tr').length === 0 ){
@@ -149,10 +155,12 @@
                                         data: {},
                                         success: function (data) {
                                             console.log(data, 'done')
-                                            for(let i = 0; i < data.length; i++){
+                                            window.location.replace('{{ path('app_contact_index') }}');
+
+                                            //for(let i = 0; i < data.length; i++){
                                                 //console.log(data[i]['Telephone'], data[i]['Nom'], data[i]['Postnom'], data[i]['Adresse'], data[i]['Fonction'])
-                                                window.location.replace('{{ path('app_contact_index') }}');
-                                            }
+                                              //  window.location.replace('{{ path('app_contact_index') }}');
+                                            //}
                                         },
                                         error: function () {
                                             alert('Erreur lors de la requête AJAX.');

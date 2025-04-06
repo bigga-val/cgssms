@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Entity\Organisation;
+use App\Repository\ContactGroupeRepository;
 use App\Repository\ContactRepository;
 use App\Repository\GroupeRepository;
 use App\Repository\HistoriqueRepository;
@@ -163,7 +164,7 @@ class HomeController extends AbstractController
             //dd("Erreur: ", $err, "Response:", $response);
             //return $this->redirectToRoute('app_home');
             return $response ;//. ' || ' . $err;
-
+            return true;
         } catch (Exception $e) {
             return $e->getMessage();
         }
@@ -296,6 +297,7 @@ class HomeController extends AbstractController
                                     ContactRepository $contactRepository,
                                     HistoriqueController $historiqueController,
                                     OrganisationRepository $organisationRepository,
+    ContactGroupeRepository $contactGroupeRepository,
     UserRepository $userRepository,
     ): JsonResponse
     {
@@ -307,44 +309,53 @@ class HomeController extends AbstractController
         }
         //$sender = 'mulykap';//$request->get("sender");
         $groupeID = $request->get("groupeID");
-        $contacts = $contactRepository->findBy(['groupe'=>$groupeID]);
+
+        //$contacts = $contactRepository->findBy(['groupe'=>$groupeID]);
+        $groupeContacts = $contactGroupeRepository->findBy(['groupe'=>$groupeID]);
+        //return new JsonResponse(count($groupeContacts));
 
         $user = $userRepository->find($this->getUser()->getId());
 
         $response = '';
-        if(count($contacts)==0){
+        if(count($groupeContacts)==0){
             return new JsonResponse("Aucun contact trouve");
-        }else if(count($contacts) >= $user->getTotalSMS()) {
+        }else if(count($groupeContacts) >= $user->getTotalSMS()) {
             return new JsonResponse("Vous n'avez pas assez de credit. Veuillez contactez l'administrateur");
         }else if($user->getTotalSMS() <= 1){
             return new JsonResponse("Vous n'avez pas assez de credit. Veuillez contactez l'administrateur");
 
         }else{
             $numbers = "";
-            foreach ($contacts as $contact) {
+            foreach ($groupeContacts as $groupeContact) {
                 try {
-                $tosend = $message;
-                if (str_contains($tosend, '[Nom]')) {
-                    $tosend = str_replace('[Nom]', $contact->getNom(), $tosend);
-                }
-                if (str_contains($tosend, '[Postnom]')) {
-                    $tosend = str_replace('[Postnom]', $contact->getPostnom(), $tosend);
-                }
-                if (str_contains($tosend, '[Adresse]')) {
-                    $tosend = str_replace('[Adresse]', $contact->getAdresse(), $tosend);
-                }
-                if (str_contains($tosend, '[Fonction]')) {
-                    $tosend = str_replace('[Fonction]', $contact->getFonction(), $tosend);
-                }
-                $tosend = str_replace(' ', '+', $tosend);
-                $numero = '%2b243'.substr($contact->getTelephone(), -9);
-                $response = $this->envoyer($numero, $tosend, $sender);
-                $data = json_decode($response, true);
+                    $contact = $groupeContact->getContact();
+                    //return new JsonResponse($contact->getTelephone());
+                    $tosend = $message;
+                    if (str_contains($tosend, '[Nom]')) {
+                        $tosend = str_replace('[Nom]', $contact->getNom(), $tosend);
+                    }
+                    if (str_contains($tosend, '[Postnom]')) {
+                        $tosend = str_replace('[Postnom]', $contact->getPostnom(), $tosend);
+                    }
+                    if (str_contains($tosend, '[Adresse]')) {
+                        $tosend = str_replace('[Adresse]', $contact->getAdresse(), $tosend);
+                    }
+                    if (str_contains($tosend, '[Fonction]')) {
+                        $tosend = str_replace('[Fonction]', $contact->getFonction(), $tosend);
+                    }
+                    $tosend = str_replace(' ', '+', $tosend);
+                    $numero = '%2b243'.substr($contact->getTelephone(), -9);
+                    $numbers .= $numero;
+                    //return new JsonResponse($numero);
+
+                    $response = $this->envoyer($numero, $tosend, $sender);
+                    $data = json_decode($response, true);
+                    //return new JsonResponse($data, $response);
 
                     // Accéder aux valeurs souhaitées
                     $code = $data['results'][0]['code'];
                     $reason = $data['results'][0]['reason'];
-//                    $ticket = $data['results'][0]['ticket'];
+                    $ticket = $data['results'][0]['ticket'];
 
                     $historiqueController->create($sender, $tosend, $numero, $code, $reason,
                     $entityManager);
@@ -354,11 +365,13 @@ class HomeController extends AbstractController
                         $entityManager->persist($user);
                         $entityManager->flush();
                     }
+                    //return $numero;
                 }catch (\Exception $e){
-                    return new JsonResponse([false, $e->getMessage()]);
+                    return new JsonResponse([false, $e->getMessage(), $e]);
                 }
             }
-            return new JsonResponse('true');
+            return new JsonResponse($numbers);
+//            return new JsonResponse('true');
         }
     }
 

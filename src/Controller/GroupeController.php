@@ -117,7 +117,11 @@ final class GroupeController extends AbstractController
             return $this->redirectToRoute('app_login');
         }
         $contacts = $contactGroupeRepository->findBy(['groupe' => $groupe]);
-        $allcontacts = $groupeRepository->findContactNotInGroupeByUser($groupe->getId(), $this->getUser());
+        if($this->isGranted('ROLE_ADMIN')){
+            $allcontacts = $groupeRepository->findContactNotInGroupe($groupe->getId());
+        }else{
+            $allcontacts = $groupeRepository->findContactNotInGroupeByUser($groupe->getId(), $this->getUser());
+        }
         return $this->render('groupe/attribuer.html.twig', [
             'groupe' => $groupe,
             'contacts' => $contacts,

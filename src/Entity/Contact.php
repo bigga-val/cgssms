@@ -34,6 +34,9 @@ class Contact
     #[ORM\Column(nullable: true)]
     private ?bool $isActive = null;
 
+    #[ORM\ManyToOne]
+    private ?User $user = null;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -119,6 +122,18 @@ class Contact
     public function setActive(?bool $isActive): static
     {
         $this->isActive = $isActive;
+
+        return $this;
+    }
+
+    public function getUser(): ?User
+    {
+        return $this->user;
+    }
+
+    public function setUser(?User $user): static
+    {
+        $this->user = $user;
 
         return $this;
     }

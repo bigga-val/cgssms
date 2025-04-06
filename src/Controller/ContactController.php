@@ -41,7 +41,7 @@ final class ContactController extends AbstractController
     }
 
     #[Route('/new', name: 'app_contact_new', methods: ['GET', 'POST'])]
-    public function new(Request $request, EntityManagerInterface $entityManager): Response
+    public function new(Request $request, EntityManagerInterface $entityManager, ContactGroupeRepository $contactGroupeRepository): Response
     {
         if(!$this->getUser()){
             return $this->redirectToRoute('app_login');
@@ -51,6 +51,13 @@ final class ContactController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+
+            $contactGroupe = new ContactGroupe();
+            $contactGroupe->setContact($contact);
+            $contactGroupe->setgroupe($contact->getGroupe());
+
+            $entityManager->persist($contactGroupe);
+            $contact->setuser($this->getUser());
             $entityManager->persist($contact);
             $entityManager->flush();
 
@@ -77,8 +84,14 @@ final class ContactController extends AbstractController
         $contact->setPostnom($request->get('postnom'));
         $contact->setAdresse($request->get('adresse'));
         $contact->setFonction($request->get('fonction'));
-        $contact->setgroupe($groupeRepository->find($request->get('groupeID')));
+        $contact->setUser($this->getUser());
+
+        $contactGroupe = new ContactGroupe();
+        $contactGroupe->setContact($contact);
+        $contactGroupe->setGroupe($contact->getGroupe());
+
         $entityManager->persist($contact);
+        $entityManager->persist($contactGroupe);
         $entityManager->flush();
         return new JsonResponse(true);
     }

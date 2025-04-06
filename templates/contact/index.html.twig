@@ -17,14 +17,20 @@
                     <th>Postnom</th>
                     <th>Adresse</th>
                     <th>Fonction</th>
-                    <th>Groupe</th>
+                    {% if is_granted('ROLE_ADMIN') %}
+                    <th>User</th>
+                    {% endif %}
                     <th>Organisation</th>
                     <th>actions</th>
                 </tr>
                 </thead>
                 <tbody>
                 {% if is_granted('ROLE_ADMIN') %}
+                    {% set counter = 0 %}
+
                     {% for contact in contacts %}
+                        {% set counter = counter + 1 %}
+
                         <tr>
                             <td>{{ contact.id }}</td>
                             <td>{{ contact.telephone }}</td>
@@ -32,7 +38,7 @@
                             <td>{{ contact.postnom }}</td>
                             <td>{{ contact.adresse }}</td>
                             <td>{{ contact.fonction }}</td>
-                            <td>{{ contact.groupe.designation }}</td>
+                            <td>{{ contact.user.username }}</td>
                             <td>{{ contact.groupe.organisation.designation }}</td>
                             <td>
                                 <a href="{{ path('app_contact_show', {'id': contact.id}) }}">show</a>
@@ -45,16 +51,17 @@
                         </tr>
                     {% endfor %}
                 {% else %}
-
+                    {% set counter = 0 %}
                 {% for contact in contacts %}
+                    {% set counter = counter + 1 %}
                     <tr>
-                        <td>{{ contact.id }}</td>
+                        <td>{{ counter }}</td>
                         <td>{{ contact.telephone }}</td>
                         <td>{{ contact.nom }}</td>
                         <td>{{ contact.postnom }}</td>
                         <td>{{ contact.adresse }}</td>
                         <td>{{ contact.fonction }}</td>
-                        <td>{{ contact.groupe }}</td>
+
                         <td>{{ contact.organisation }}</td>
                         <td>
                             <a href="{{ path('app_contact_show', {'id': contact.id}) }}">show</a>
@@ -72,7 +79,7 @@
 
         </div>
         <div class="card-footer">
-            <a href="{{ path('app_contact_new') }}">Create new</a>
+            <a href="{{ path('app_contact_new') }}" class="btn btn-success">Create new</a>
 
         </div>
     </div>

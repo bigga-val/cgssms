@@ -218,6 +218,7 @@
             })
 
             $("#btn-envoyer-sms").on("click", function(e){
+                // $(this).attr("disabled", true)
                 let message = $("#message").val()
                 let listID = $("#listes").val()
                 let sender = $("#organisation").val()
@@ -237,7 +238,7 @@
                         success: function (data) {
                             console.log(data)
                             if(data){
-                                window.location.replace('{{ path('app_historique_index') }}');
+                                //window.location.replace('{{ path('app_historique_index') }}');
                             }else{
                                 $("#erreur-longueur")
                                     .text(data)

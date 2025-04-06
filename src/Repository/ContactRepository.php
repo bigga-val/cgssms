@@ -31,7 +31,7 @@ class ContactRepository extends ServiceEntityRepository
             $query->setParameter('user', $value);
             //$query->setParameter('mydate', $mydate->format('Y-m-d'));
             return $query->getResult();
-        }
+         }
     public function findContacts(): array
     {
         $em = $this->getEntityManager();

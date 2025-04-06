@@ -144,8 +144,8 @@
                     if ($(this).prop("checked")){
                         //console.log( i + "- "+ e +" : " + $( this ).attr('name') );
                         $.getJSON("{{ path("json_contact_disallocate") }}", {contactID:$(this).attr('name'), groupeID:{{ groupe.id }}}, function(data){
-                            //window.location.reload()
-                            console.log(data)
+                            window.location.reload()
+                            //console.log(data)
                         })
                     }
 

@@ -22,7 +22,7 @@ class GroupeRepository extends ServiceEntityRepository
         $em = $this->getEntityManager();
         $query = $em->createQuery(
             'select g.id, g.designation, o.designation organisation
-            , (select count(c.id) from App\Entity\Contact c where c.groupe = g.id) as totalContact
+            , (select count(cg.id) from App\Entity\ContactGroupe cg where cg.groupe = g.id ) as totalContact
                     from App\Entity\Groupe g, App\Entity\Organisation o 
                     where g.organisation = o.id
                     and o.user = :user
@@ -38,7 +38,7 @@ class GroupeRepository extends ServiceEntityRepository
         $em = $this->getEntityManager();
         $query = $em->createQuery(
             'select g.id, g.designation, o.designation organisation
-            , (select count(c.id) from App\Entity\Contact c where c.groupe = g.id) as totalContact
+            , (select count(cg.id) from App\Entity\ContactGroupe cg where cg.groupe = g.id) as totalContact
                     from App\Entity\Groupe g, App\Entity\Organisation o 
                     where g.organisation = o.id
                     
@@ -54,7 +54,7 @@ class GroupeRepository extends ServiceEntityRepository
         $em = $this->getEntityManager();
         $query = $em->createQuery(
             'select g.id, g.designation, o.designation organisation
-                    , (select count(c.id) from App\Entity\Contact c where c.groupe = g.id) as totalContact
+                    , (select count(c.id) from App\Entity\ContactGroupe c where c.groupe = g.id) as totalContact
                     from App\Entity\Groupe g, App\Entity\Organisation o
                     where g.organisation = o.id
                     and g.organisation = :organisation
@@ -66,21 +66,38 @@ class GroupeRepository extends ServiceEntityRepository
     }
 
 
-    public function findContactNotInGroupeByUser($groupeID, $userID): array
+    public function findContactNotInGroupe($groupeID): array
     {
         $em = $this->getEntityManager();
         $query = $em->createQuery(
-            'SELECT c.id contactID, c.telephone, c.nom, c.postnom, c.fonction,  g.id, g.designation, o.id, o.designation 
-                    FROM App\Entity\Contact c, App\Entity\Groupe g, App\Entity\Organisation o
-                    where c.groupe = g.id
-                    and g.organisation = o.id
-                    and o.user = :user
-                    and c.id not in (SELECT c2.id from App\Entity\ContactGroupe cg, App\Entity\Contact c2 
+            'SELECT c.id contactID, c.telephone, c.nom, c.postnom, c.fonction
+                    FROM App\Entity\Contact c
+                    where
+                    c.id not in (SELECT c2.id from App\Entity\ContactGroupe cg, App\Entity\Contact c2 
                     where c2.id = cg.contact
                     and cg.groupe = :groupeID)
             '
         );
-        $query->setParameter('user', $userID);
+        //$query->setParameter('user', $userID);
+        $query->setParameter('groupeID', $groupeID);
+        //$query->setParameter('mydate', $mydate->format('Y-m-d'));
+        return $query->getResult();
+    }
+
+    public function findContactNotInGroupeByUser($groupeID, $userID): array
+    {
+        $em = $this->getEntityManager();
+        $query = $em->createQuery(
+            'SELECT c.id contactID, c.telephone, c.nom, c.postnom, c.fonction
+                    FROM App\Entity\Contact c
+                    where
+                    c.id not in (SELECT c2.id from App\Entity\ContactGroupe cg, App\Entity\Contact c2 
+                    where c2.id = cg.contact
+                    and cg.groupe = :groupeID)
+                    and c.user = :userID
+            '
+        );
+        $query->setParameter('userID', $userID);
         $query->setParameter('groupeID', $groupeID);
         //$query->setParameter('mydate', $mydate->format('Y-m-d'));
         return $query->getResult();
