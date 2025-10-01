@@ -1,0 +1,272 @@
+{% extends 'base_landing.html.twig' %}
+
+{% block title %} MSG-PRO : Documentation - La meilleure plate-forme d'envoi des SMS rapidement{% endblock %}
+
+{% block body %}
+
+    <header id="header" class="header fixed-top">
+
+        <div class="topbar d-flex align-items-center">
+            <div class="container d-flex justify-content-center justify-content-md-between">
+                <div class="contact-info d-flex align-items-center">
+                    <i class="bi bi-envelope d-flex align-items-center"><a href="mailto:info@msg-pro.com">Info@msg-pro.com</a></i>
+                    <i class="bi bi-phone d-flex align-items-center ms-4"><span>+243 851 331 051</span></i>
+                </div>
+                <div class="social-links d-none d-md-flex align-items-center">
+                    <a href="#" class="twitter"><i class="bi bi-twitter-x"></i></a>
+                    <a href="https://www.facebook.com/profile.php?id=61575012670787" class="facebook"><i class="bi bi-facebook"></i></a>
+                    <a href="#" class="instagram"><i class="bi bi-instagram"></i></a>
+                    <a href="https://www.linkedin.com/company/106139815" class="linkedin"><i class="bi bi-linkedin"></i></a>
+                </div>
+            </div>
+        </div><!-- End Top Bar -->
+
+        <div class="branding d-flex align-items-center">
+
+            <div class="container position-relative d-flex align-items-center justify-content-between">
+                <a href="" class="logo d-flex align-items-center">
+                    <!-- Uncomment the line below if you also wish to use an image logo -->
+                    <img src="assets/img/logo.png" alt="">
+                    <h1 class="sitename">MSG-PRO</h1>
+                </a>
+
+                <nav id="navmenu" class="navmenu">
+                    <ul>
+                        <li><a href="#hero" class="active">Documentation</a></li>
+                        <li><a href="/">Accueil</a></li>
+                        {% if app.user %}
+                            <a href="{{ path("app_home") }}" class="btn btn-outline-danger btn-sm">{{ app.user.username }}</a>
+
+                        {% else %}
+                            <li><a href="{{ path("app_login") }}">Connexion</a></li>
+                            <li><a href="{{ path("app_register") }}">Inscription</a></li>
+
+                        {% endif %}
+                    </ul>
+                    <i class="mobile-nav-toggle d-xl-none bi bi-list"></i>
+                </nav>
+            </div>
+
+        </div>
+
+    </header>
+
+    <main class="main">
+        <section class="section">
+            <div class="container mt-5">
+                <div class="row">
+                    <!-- Colonne des titres -->
+                    <div class="col-md-4">
+                        <div class="p-3 border rounded bg-light">
+                            <h5 class="mb-3"><a href="#presentation">Présentation</a></h5>
+                            <h5 class="mb-3"><a href="#fonctionnalites">Fonctionnalités principales</a> </h5>
+                            <h5 class="mb-3"><a href="#tarification">Tarification</a> </h5>
+                            <h5 class="mb-3"><a href="#authentification">Inscription et connexion</a> </h5>
+                            <h5 class="mb-3"><a href="#campagne">Création d'une campagne SMS</a> </h5>
+                            <h5 class="mb-3"><a href="#contacts">Gestion des contacts</a> </h5>
+                            <h5 class="mb-3"><a href="#support"> Support et assistance</a></h5>
+                            <h5 class="mb-3"><a href="#confidentialite">Sécurité et confidentialité</a></h5>
+                            <h5 class="mb-3"><a href="#faq">Questions fréquentes (FAQ)</a></h5>
+                        </div>
+                    </div>
+
+                    <!-- Colonne des contenus avec scroll -->
+                    <div class="col-md-8">
+                        <div class="p-3 border rounded" style="height: 600px; overflow-y: auto;">
+                            <div id="presentation">
+                                <h4 class="font-weight-bold">Présentation</h4>
+                                MSG-PRO est une plateforme d'envoi de SMS en masse, spécialement conçue pour les entreprises en République Démocratique du Congo. Elle permet de créer et de gérer des campagnes SMS ciblées avec une interface intuitive.
+                            </div>
+                            <div id="fonctionnalites">
+                                <h4 class="font-weight-bold">Fonctionnalités principales</h4>
+                                <ul>
+                                    <li><strong>Campagnes SMS personnalisées :</strong> Créez et envoyez des messages adaptés à votre audience.</li>
+                                    <li><strong>Tableau de bord intuitif :</strong> Suivi en temps réel des campagnes et des crédits SMS.</li>
+                                    <li><strong>Gestion des stocks SMS :</strong> Visualisation et rechargement facile des crédits.  </li>                            </li>
+                                    <li><strong>Segmentation des contacts :</strong> Ciblage par localisation, comportement ou intérêts. </li>                            </li>
+                                    <li><strong>Support client dédié :</strong> Assistance personnalisée pour l'utilisation de la plateforme. </li>                            </li>
+                                </ul>
+                            </div>
+                            <div id="tarification">
+                                <h4 class="font-weight-bold">Tarification</h4>
+                                <table class="table table-hover table-bordered">
+                                    <thead>
+                                    <tr>
+                                        <th>Pack</th>
+                                        <th class="text-center">Prix</th>
+                                        <th class="text-center">SMS</th>
+                                        <th class="text-center">Prix par SMS</th>
+                                    </tr>
+
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td>Pack Mini</td>
+                                            <td class="text-center">$6</td>
+                                            <td class="text-center">100</td>
+                                            <td class="text-center">$0.06</td>
+                                        </tr>
+                                        <tr>
+                                            <td>Pack Midi</td>
+                                            <td class="text-center">$30</td>
+                                            <td class="text-center">500</td>
+                                            <td class="text-center">$0.06</td>
+                                        </tr>
+                                        <tr>
+                                            <td>Pack Maxi</td>
+                                            <td class="text-center">$150</td>
+                                            <td class="text-center">2500</td>
+                                            <td class="text-center">$0.06</td>
+                                        </tr>
+                                        <tr>
+                                            <td>Pack Personnalisé</td>
+                                            <td class="text-center">Variable</td>
+                                            <td class="text-center">Sur mesure</td>
+                                            <td class="text-center"><a class="btn btn-sm btn-outline-danger" href="{{ path("app_commande") }}">Commander</a></td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                                <p> <i>Les tarifs sont exprimés en dollars américains. Des packs personnalisés sont disponibles selon votre budget.</i></p>
+                            </div>
+                            <div id="authentification">
+                                <h4 class="font-weight-bold">Inscription et Connexion</h4>
+                                <ol>
+                                    <li><strong>Inscription :</strong>
+                                        <ul>
+                                            <li><a class="text-black" href="https://msg-pro.com/register">Cliquez sur ce lien pour aller sur la page d'inscription</a></li>
+                                            <li>Remplissez le formulaire avec vos informations.</li>
+                                            <li>Un bonus de 5 SMS est offert à la création du compte pour vos tests.</li>
+                                        </ul>
+                                    </li>
+                                    <li><strong>Connexion :</strong>
+                                        <ul>
+                                            <li><a class="text-black" href="https://msg-pro.com/login">Cliquez sur ce lien pour aller sur la page de connexion</a></li>
+                                            <li>Remplissez le formulaire avec vos informations.</li>
+                                            <li>Cliquez sur le bouton pour vous connecter.</li>
+                                        </ul>
+                                    </li>
+                                </ol>
+                            </div>
+                            <div id="campagne">
+                                <h4 class="font-weight-bold">Création d'une campagne SMS</h4>
+                                <ol>
+                                    <li>Création d'une campagne SMS</li>
+                                    <li>Cliquez sur "Nouvelle campagne".</li>
+                                    <li>Renseignez les détails : Message à envoyer, Liste des Contacts ou Segmentation.</li>
+                                    <li>Envoyez immédiatement.</li>
+                                </ol>
+                            </div>
+                            <div id="contacts">
+                                <div class="font-weight-bold jumbotron-fluid">Gestion des contacts</div>
+                                <ol>
+                                    <li><strong>Ajout manuel : </strong>Entrez les numéros un par un.</li>
+                                    <li><strong>Importation : </strong>Téléchargez un fichier Excel(.xlsx) contenant vos contacts.</li>
+                                    <li><strong>Segmentation : </strong>Créez des groupes selon des critères spécifiques pour un ciblage précis.</li>
+                                </ol>
+                            </div>
+                            <div id="support">
+                                <h4 class="font-weight-bold">Support et assistance</h4>
+                                <ol>
+                                    <li><strong>Email : </strong>info@msg-pro.com</li>
+                                    <li><strong>Téléphone & WhatsApp : +</strong>+243 851 331 051</li>
+                                    <li><strong>Adresse : </strong>1434 RN39, Kolwezi, Lualaba, RDC</li>
+                                </ol>
+                            </div>
+                            <div id="confidentialite">
+                                <h4 class="font-weight-bold">Sécurité et confidentialité</h4>
+                                MSG-PRO s'engage à protéger les données de ses utilisateurs. Les informations personnelles et les données de campagne sont sécurisées et ne sont pas partagées avec des tiers sans consentement.
+                            </div>
+                            <br>
+                            <div id="faq" class="">
+                                <h4 class="font-weight-bold">Questions fréquentes(FAQ)</h4>
+                                <ul>
+                                    <li><strong>Q : Les SMS expirent-ils avec le temps ?  </strong>R : Non, les SMS achetés restent valables sans date d'expiration.</li>
+                                    <li><strong>Q : Puis-je envoyer des SMS en dehors de la RDC ?</strong>R : La plateforme est principalement conçue pour la RDC. Pour des envois internationaux, veuillez contacter le support.</li>
+                                    <li><strong>Q : Existe-t-il une API pour intégrer MSG-PRO à mon système ? </strong>R : Pour des intégrations spécifiques, veuillez contacter le support technique.</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </section>
+    </main>
+
+
+    <footer id="footer2" class="footer position-relative dark-background">
+        <div class="container footer-top">
+            <div class="row gy-4">
+                <div class="col-lg-4 col-md-6">
+                    <div class="footer-about">
+                        <a href="" class="logo sitename">MSG-PRO</a>
+                        <div class="footer-contact pt-3">
+                            <p>1434 RN39,</p>
+                            <p>Kolwezi, Lualaba/RDC</p>
+                            <p class="mt-3"><strong>Phone:</strong> <span>+243 851 331 051 </span></p>
+                            <p><strong>Email:</strong> <span>info@msg-pro.com</span></p>
+                        </div>
+                        <div class="social-links d-flex mt-4">
+                            <a href=""><i class="bi bi-twitter-x"></i></a>
+                            <a href=""><i class="bi bi-facebook"></i></a>
+                            <a href=""><i class="bi bi-instagram"></i></a>
+                            <a href=""><i class="bi bi-linkedin"></i></a>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-lg-4 col-md-6 footer-links">
+                    <h4>Liens</h4>
+                    <ul>
+                        <li><a href="#">Home</a></li>
+                        <li><a href="{{ path("app_login") }}">Connexion</a></li>
+                        <li><a href="{{ path("app_register") }}">S'inscrire</a></li>
+                    </ul>
+                </div>
+
+                <div class="col-lg-4 col-md-6 footer-links">
+                    <h4>Nos Services SMS Pour:</h4>
+                    <ul>
+                        <li><a href="#">Entreprise</a></li>
+                        <li><a href="#">Association</a></li>
+                        <li><a href="#">Particulier</a></li>
+{#                        <li><a href="#">Marketing</a></li>#}
+{#                        <li><a href="#">Graphic Design</a></li>#}
+                    </ul>
+                    <img class="img-responsive h-25 w-25" src="{{ asset("landing/assets/img/favicon.png") }}" alt="MSG-PRO log">
+                </div>
+
+{#                <div class="col-lg-4 col-md-12 footer-newsletter">#}
+{#                    <h4>Our Newsletter</h4>#}
+{#                    <p>Subscribe to our newsletter and receive the latest news about our products and services!</p>#}
+{#                    <form action="forms/newsletter.php" method="post" class="php-email-form">#}
+{#                        <div class="newsletter-form"><input type="email" name="email"><input type="submit" value="Subscribe"></div>#}
+{#                        <div class="loading">Loading</div>#}
+{#                        <div class="error-message"></div>#}
+{#                        <div class="sent-message">Your subscription request has been sent. Thank you!</div>#}
+{#                    </form>#}
+{#                </div>#}
+
+            </div>
+        </div>
+
+        <div class="container copyright text-center mt-4">
+            <p>© <span>Copyright</span> <strong class="px-1 sitename">MSG-PRO</strong> <span>All Rights Reserved</span></p>
+            <div class="credits">
+                <!-- All the links in the footer should remain intact. -->
+                <!-- You can delete the links only if you've purchased the pro version. -->
+                <!-- Licensing information: https://bootstrapmade.com/license/ -->
+                <!-- Purchase the pro version with working PHP/AJAX contact form: [buy-url] -->
+                Designed by <a href="https://Insoftware.tech/">Insoftware.tech</a>
+            </div>
+        </div>
+
+    </footer>
+
+    <!-- Scroll Top -->
+    <a href="#" id="scroll-top" class="scroll-top d-flex align-items-center justify-content-center"><i class="bi bi-arrow-up-short"></i></a>
+
+    <!-- Preloader -->
+{#    <div id="preloader"></div>#}
+
+{% endblock %}

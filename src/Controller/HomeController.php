@@ -88,6 +88,7 @@ class HomeController extends AbstractController
             ]);
     }
 
+
     #[Route('/confirmercommande', name: 'app_confirmer_commande')]
     public function confirmercommande(Request $request): Response
     {
@@ -389,5 +390,10 @@ class HomeController extends AbstractController
             }
         }
         return $this->redirectToRoute("app_login");
+    }
+
+    #[Route('/documentation', name: 'app_documentation', methods: ['GET'])]
+    public function documenation(Request $request,UserRepository $userRepository){
+        return $this->render('home/documentation.html.twig', []);
     }
 }
