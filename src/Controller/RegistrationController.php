@@ -58,6 +58,7 @@ class RegistrationController extends AbstractController
 
         return $this->render('registration/register.html.twig', [
             'registrationForm' => $form,
+            'site_key' => $_ENV['GOOGLE_RECAPTCHA_SITE_KEY']
         ]);
     }
 

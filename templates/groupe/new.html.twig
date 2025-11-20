@@ -16,10 +16,7 @@
                         <p class="alert alert-default-warning m-3 d-block text-black">Vous êtes sur le point de créer des contacts directement liés à un Groupe de Contact. veuillez trouver ci-bas, le modèle excel à remplir et uploader.</p>
 
                         <form action="">
-                            <div class="form-group">
-                                <label for="groupe_designation">Designation</label>
-                                <input type="text" class="form-control" name="groupe_designation" id="groupe_designation">
-                            </div>
+
                             <div class="form-group">
                                 <label for="organisation_organisation">Organisation</label>
                                 <select name="groupe_organisation" id="groupe_organisation" class="form-control">
@@ -30,6 +27,10 @@
                             </div>
                             <div class="form-group">
 {#                                <input type="submit" class="btn btn-success">#}
+                            </div>
+                            <div class="form-group">
+                                <label for="groupe_designation">Designation</label>
+                                <input type="text" class="form-control" name="groupe_designation" id="groupe_designation">
                             </div>
                         </form>
                     </div>
@@ -140,7 +141,8 @@
                             method: 'GET',
                             data: {},
                             success: function (groupeID) {
-                                //console.log(data, 'done')
+                                console.log(data, 'done')
+                                let mylastGroupID = groupeID
                                 for(let i = 0; i < data.length; i++){
                                     //console.log(data[i]['Telephone'], data[i]['Nom'], data[i]['Postnom'], data[i]['Adresse'], data[i]['Fonction'])
                                     $.ajax({
@@ -150,12 +152,12 @@
                                             '&postnom='+data[i]['Postnom']+
                                             '&adresse='+data[i]['Adresse']+
                                             '&fonction='+data[i]['Fonction']+
-                                            '&groupeID='+groupeID
+                                            '&groupeID='+mylastGroupID
                                         ,method: 'GET',
                                         data: {},
                                         success: function (data) {
-                                            console.log(data, 'done')
-                                            window.location.replace('{{ path('app_contact_index') }}');
+                                            console.log(data, 'done - lastgroupe: ', mylastGroupID)
+                                            //window.location.replace('{{ path('app_contact_index') }}');
 
                                             //for(let i = 0; i < data.length; i++){
                                                 //console.log(data[i]['Telephone'], data[i]['Nom'], data[i]['Postnom'], data[i]['Adresse'], data[i]['Fonction'])

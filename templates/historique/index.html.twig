@@ -31,7 +31,13 @@
                             <tr>
                                 <td>{{ counter }}</td>
                                 <td>{{ historique.date | format_datetime() }}</td>
-                                <td>{{ historique.user.username }}</td>
+                                <td>
+                                    {% if historique.user %}
+                                        {{ historique.user.username }}
+                                    {% else %}
+                                        <em>Deleted User</em>
+                                    {% endif %}
+                                </td>
                                 <td>{{ historique.sender }}</td>
                                 <td>{{ historique.numero | replace({'%2b': '+'}) }}</td>
                                 <td>{{ historique.message | replace({'+': ' '}) }}</td>

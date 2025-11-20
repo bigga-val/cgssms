@@ -10,6 +10,7 @@ use App\Repository\ContactGroupeRepository;
 use App\Repository\ContactRepository;
 use App\Repository\GroupeRepository;
 use App\Repository\OrganisationRepository;
+use App\Repository\VContactGroupeRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use PHPUnit\Exception;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -22,7 +23,7 @@ use Symfony\Component\Routing\Attribute\Route;
 final class ContactController extends AbstractController
 {
     #[Route(name: 'app_contact_index', methods: ['GET'])]
-    public function index(ContactRepository $contactRepository): Response
+    public function index(ContactRepository $contactRepository, VContactGroupeRepository $VContactGroupeRepository): Response
     {
         if(!$this->getUser()){
             return $this->redirectToRoute('app_login');
@@ -32,7 +33,8 @@ final class ContactController extends AbstractController
 
         }else{
 
-            $contacts = $contactRepository->findContactsByUser($this->getUser()->getId());
+           // $contacts = $contactRepository->findContactsByUserV2($this->getUser()->getId());
+            $contacts = $VContactGroupeRepository->findBy(['user' => $this->getUser()], ['id' => 'DESC']);
         }
         //dd($contacts);
         return $this->render('contact/index.html.twig', [
@@ -85,10 +87,11 @@ final class ContactController extends AbstractController
         $contact->setAdresse($request->get('adresse'));
         $contact->setFonction($request->get('fonction'));
         $contact->setUser($this->getUser());
+        $contact->setGroupe($groupeRepository->find($request->get('groupe')));
 
         $contactGroupe = new ContactGroupe();
         $contactGroupe->setContact($contact);
-        $contactGroupe->setGroupe($contact->getGroupe());
+        $contactGroupe->setGroupe($groupeRepository->find($request->get('groupe')));
 
         $entityManager->persist($contact);
         $entityManager->persist($contactGroupe);

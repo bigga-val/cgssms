@@ -11,6 +11,7 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Validator\Constraints\IsTrue;
 use Symfony\Component\Validator\Constraints\Length;
 use Symfony\Component\Validator\Constraints\NotBlank;
+use EWZ\Bundle\RecaptchaBundle\Form\Type\EWZRecaptchaType;
 
 class RegistrationFormType extends AbstractType
 {
@@ -60,6 +61,16 @@ class RegistrationFormType extends AbstractType
                         // max length allowed by Symfony for security reasons
                         'max' => 4096,
                     ]),
+                ],
+            ])
+            ->add('recaptcha', EWZRecaptchaType::class, [
+                'label' => false,
+                'mapped' => false,
+                'constraints' => [
+                    new NotBlank(),
+                    new \EWZ\Bundle\RecaptchaBundle\Validator\Constraints\IsTrueV3(), // Pour v3
+                    // ou pour v2 :
+                    new \EWZ\Bundle\RecaptchaBundle\Validator\Constraints\IsTrue(),
                 ],
             ])
         ;

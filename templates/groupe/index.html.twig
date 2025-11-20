@@ -1,6 +1,6 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Groupe index{% endblock %}
+{% block title %}Liste des Groupes{% endblock %}
 
 {% block body %}
     <div class="container-fluid">
@@ -45,12 +45,11 @@
                         </table>
                     </div>
                     <div class="card-footer">
-                        <a href="{{ path('app_groupe_new') }}">Create new</a>
+                        <a class="btn btn-primary btn" href="{{ path('app_groupe_new') }}">Create new</a>
 
                     </div>
                 </div>
             </div>
         </div>
     </div>
-
 {% endblock %}

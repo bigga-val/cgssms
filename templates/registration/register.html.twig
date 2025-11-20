@@ -54,6 +54,12 @@
                         {{ form_widget(registrationForm.plainPassword2,{'attr':{'class':'form-control'}}) }}
 
                     </div>
+                    <div class="form-group g-recaptcha"
+                         data-sitekey="{{ site_key }}"
+                         data-callback="recaptchaSuccess"
+                         data-expired-callback="recaptchaExpired">
+                        {{ form_row(registrationForm.recaptcha) }}
+                    </div>
 
 {#                        {{ form_row(registrationForm.agreeTerms) }}#}
 
@@ -112,7 +118,34 @@
                 return re.test(String(email).toLowerCase());
             }
         })
-    </script>
 
+        function recaptchaSuccess() {
+            // L'utilisateur a validé le captcha
+            document.getElementById('btn-register').disabled = false;
+        }
+
+        function recaptchaExpired() {
+            // Le captcha a expiré, on bloque à nouveau le bouton
+            document.getElementById('btn-register').disabled = true;
+        }
+
+    </script>
+    <script>
+        var onloadCallback = function() {
+            // Sélectionne le widget rendu par EWZRecaptcha
+            var recaptchaContainer = document.querySelector('.g-recaptcha');
+            if(recaptchaContainer) {
+                grecaptcha.render(recaptchaContainer, {
+                    'sitekey': '{{ app.request.getHost() ? app.request.getHost() : "6LdR1vkrAAAAAPV9TCcHzzRIy1jToQhUXcURfL1P" }}',
+                    'callback': function() {
+                        document.getElementById('submitBtn').disabled = false;
+                    },
+                    'expired-callback': function() {
+                        document.getElementById('submitBtn').disabled = true;
+                    }
+                });
+            }
+        };
+    </script>
 
 {% endblock %}
