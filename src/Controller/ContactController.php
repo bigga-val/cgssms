@@ -87,11 +87,11 @@ final class ContactController extends AbstractController
         $contact->setAdresse($request->get('adresse'));
         $contact->setFonction($request->get('fonction'));
         $contact->setUser($this->getUser());
-        $contact->setGroupe($groupeRepository->find($request->get('groupe')));
+        $contact->setGroupe($groupeRepository->find($request->get('groupeID')));
 
         $contactGroupe = new ContactGroupe();
         $contactGroupe->setContact($contact);
-        $contactGroupe->setGroupe($groupeRepository->find($request->get('groupe')));
+        $contactGroupe->setGroupe($groupeRepository->find($request->get('groupeID')));
 
         $entityManager->persist($contact);
         $entityManager->persist($contactGroupe);
