@@ -11,7 +11,9 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Validator\Constraints\IsTrue;
 use Symfony\Component\Validator\Constraints\Length;
 use Symfony\Component\Validator\Constraints\NotBlank;
-use EWZ\Bundle\RecaptchaBundle\Form\Type\EWZRecaptchaType;
+//use EWZ\Bundle\RecaptchaBundle\Form\Type\EWZRecaptchaType;
+use Karser\Recaptcha3Bundle\Form\Recaptcha3Type;
+use Karser\Recaptcha3Bundle\Validator\Constraints\Recaptcha3;
 
 class RegistrationFormType extends AbstractType
 {
@@ -63,16 +65,20 @@ class RegistrationFormType extends AbstractType
                     ]),
                 ],
             ])
-            ->add('recaptcha', EWZRecaptchaType::class, [
-                'label' => false,
-                'mapped' => false,
-                'constraints' => [
-                    new NotBlank(),
-                    new \EWZ\Bundle\RecaptchaBundle\Validator\Constraints\IsTrueV3(), // Pour v3
-                    // ou pour v2 :
-                    new \EWZ\Bundle\RecaptchaBundle\Validator\Constraints\IsTrue(),
-                ],
-            ])
+            ->add('captcha', Recaptcha3Type::class, [
+                'constraints' => new Recaptcha3(),
+                'action_name' => 'contact',
+            ]);
+//            ->add('recaptcha', EWZRecaptchaType::class, [
+//                'label' => false,
+//                'mapped' => false,
+//                'constraints' => [
+//                    new NotBlank(),
+//                    new \EWZ\Bundle\RecaptchaBundle\Validator\Constraints\IsTrueV3(), // Pour v3
+//                    // ou pour v2 :
+//                    new \EWZ\Bundle\RecaptchaBundle\Validator\Constraints\IsTrue(),
+//                ],
+//            ])
         ;
     }
 

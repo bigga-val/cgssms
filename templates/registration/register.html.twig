@@ -54,12 +54,12 @@
                         {{ form_widget(registrationForm.plainPassword2,{'attr':{'class':'form-control'}}) }}
 
                     </div>
-                    <div class="form-group g-recaptcha"
-                         data-sitekey="{{ site_key }}"
-                         data-callback="recaptchaSuccess"
-                         data-expired-callback="recaptchaExpired">
-                        {{ form_row(registrationForm.recaptcha) }}
-                    </div>
+{#                    <div class="form-group g-recaptcha"#}
+{#                         data-sitekey="{{ site_key }}"#}
+{#                         data-callback="recaptchaSuccess"#}
+{#                         data-expired-callback="recaptchaExpired">#}
+{#                        {{ form_row(registrationForm.recaptcha) }}#}
+{#                    </div>#}
 
 {#                        {{ form_row(registrationForm.agreeTerms) }}#}
 
@@ -70,13 +70,31 @@
                 </div>
             </div>
 
-
         </div>
-    <script src="{{ asset("plugins/jquery/jquery.min.js") }}"></script>
-    <script>
-        $(document).ready(function(e){
+    <script src="https://www.google.com/recaptcha/api.js?render=6LfUJ0UsAAAAAN6V75teV6YuXPCS2cfe7GR7xeg7"></script>
 
-            $("#btn-register").on('click', function(e){
+    <script src="{{ asset("plugins/jquery/jquery.min.js") }}"></script>
+
+    <script>
+        let site_key = "{{ site_key }}";
+        let myToken = ""
+
+
+        $(document).ready(function(e){
+{#            {{ recaptcha3_script() }}#}
+            console.log($("#registration_form_captcha").val())
+            grecaptcha.ready(() => {
+                grecaptcha.execute('{{ site_key }}', { action: 'test' })
+                    .then(token => {
+                        console.log('TOKEN:', token);
+                        myToken = token;
+                    });
+            });
+
+            //$("#btn-register").on('click', function(e){
+            $('form[name="registration_form"]').on('submit', function(e) {
+                e.preventDefault();
+                let form = this;
                 let email = $("#registration_form_Email").val()
                 let username = $("#registration_form_username").val()
                 let pwd = $("#registration_form_plainPassword").val()
@@ -92,6 +110,7 @@
                         .addClass("text-danger")
                     return false
                 }
+                //checking email availability
                 $.ajax({
                     url: 'JsonCheckCredentials?email='+email+'&username='+username,
                     method: 'GET',
@@ -103,7 +122,6 @@
                                 .addClass("text-danger")
                             return false
                         }
-
                     },
                     error: function () {
                         alert('Une erreur est survenue. Veuillez contacter votre admin.');
@@ -112,6 +130,27 @@
                     //let qty = $(this).parent("td").siblings("td").children("input[x-model='item.quantity']")
                 })
 
+                //cheking recaptcha
+                $.ajax({
+                    url: 'JsonVerifyRecaptcha?token='+ myToken,
+                    method: 'GET',
+                    data: {
+                    },
+                    success: function (data) {
+                        console.log(data);
+                        if(data["success"] === true && data["score"] > 0.5){
+                            form.submit()
+                        }else{
+                            alert('Une erreur est survenue. Veuillez rafraichir la page.');
+                        }
+                    },
+                    error: function () {
+                        alert('Une erreur est survenue. Veuillez rafraichir la page.');
+                        // Autres actions à effectuer en cas d'erreur
+                    }
+                    //let qty = $(this).parent("td").siblings("td").children("input[x-model='item.quantity']")
+                })
+                return false
             })
             function validateEmail(email) {
                 const re = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
@@ -129,23 +168,32 @@
             document.getElementById('btn-register').disabled = true;
         }
 
-    </script>
-    <script>
-        var onloadCallback = function() {
-            // Sélectionne le widget rendu par EWZRecaptcha
-            var recaptchaContainer = document.querySelector('.g-recaptcha');
-            if(recaptchaContainer) {
-                grecaptcha.render(recaptchaContainer, {
-                    'sitekey': '{{ app.request.getHost() ? app.request.getHost() : "6LdR1vkrAAAAAPV9TCcHzzRIy1jToQhUXcURfL1P" }}',
-                    'callback': function() {
-                        document.getElementById('submitBtn').disabled = false;
-                    },
-                    'expired-callback': function() {
-                        document.getElementById('submitBtn').disabled = true;
-                    }
-                });
-            }
-        };
+        function getRecaptchaToken(){
+            let mytok
+            grecaptcha.ready(() => {
+                grecaptcha.execute('{{ site_key }}', { action: 'test' })
+                    .then(token => {
+                        console.log('TOKEN:', token);
+                        myToken = token;
+                    });
+            });
+        }
+
     </script>
 
+    <script>
+        grecaptcha.ready(function () {
+            grecaptcha.execute('6LfUJ0UsAAAAAN6V75teV6YuXPCS2cfe7GR7xeg7', { action: 'submit' })
+                .then(function (token) {
+                    document.getElementById('registration_form_captcha').value = token;
+                });
+        });
+
+        grecaptcha.execute('{{ site_key }}', { action: 'login' })
+            .then(function(token) {
+                document.getElementById('registration_form_captcha').value = token;
+            });
+    </script>
+{% endblock %}
+{% block javascripts %}
 {% endblock %}

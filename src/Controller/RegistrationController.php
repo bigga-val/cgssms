@@ -18,6 +18,7 @@ use Symfony\Component\Routing\Attribute\Route;
 //use Symfony\Component\Validator\Constraints\DateTime;
 use DateTime;
 use DateTimeZone;
+use Symfony\Contracts\HttpClient\HttpClientInterface;
 
 class RegistrationController extends AbstractController
 {
@@ -58,7 +59,7 @@ class RegistrationController extends AbstractController
 
         return $this->render('registration/register.html.twig', [
             'registrationForm' => $form,
-            'site_key' => $_ENV['GOOGLE_RECAPTCHA_SITE_KEY']
+            'site_key' => $_ENV['RECAPTCHA3_KEY']
         ]);
     }
 
@@ -223,6 +224,22 @@ class RegistrationController extends AbstractController
         $entityManager->flush();
 
         return new JsonResponse(['data'=>true, 'msg'=>"Votre mot de passe a bien été réinitialisé."]);
+    }
+
+    #[Route('/JsonVerifyRecaptcha', name: 'JsonVerifyRecaptcha')]
+    public function verifyRecaptcha(
+        Request $request,
+        HttpClientInterface $client): Response
+    {
+        $response = $client->request('POST', 'https://www.google.com/recaptcha/api/siteverify', [
+            'body' => [
+                'secret' => $_ENV['RECAPTCHA3_SECRET'],
+                'response' => $request->get('token'),
+                'remoteip'=> $request->getClientIp()
+            ],
+        ]);
+
+        return new JsonResponse($response->toArray());
     }
 }
 

@@ -8,7 +8,7 @@
         <div class="col-12">
             <div class="card">
                 <div class="card-header bg-gradient-dark">
-                    <h3>Liste des Groupes de contacts</h3>
+                    <h3>Mes Organisations</h3>
                 </div>
                 <div class="card-body">
                     <table class="table datatable">
@@ -36,7 +36,7 @@
                         <td>{{ organisation.adresse }}</td>
                         <td>
                             {% if organisation.isApproved %}
-                            <span class="text-success">Approuve</span>
+                            <span class="text-success">Approuvé</span>
                             {% else %}
                                 <span class="text-info">Attente</span>
                             {% endif %}
@@ -55,15 +55,14 @@
                     </tr>
                 {% else %}
                     <tr>
-                        <td colspan="7">no records found</td>
+                        <td colspan="7">Aucune organisation à afficher</td>
                     </tr>
                 {% endfor %}
                 </tbody>
-
             </table>
         </div>
                 <div class="card-footer">
-                    <a class="btn btn-primary btn-sm" href="{{ path('app_organisation_new') }}">Create new</a>
+                    <a class="btn btn-primary btn-sm" href="{{ path('app_organisation_new') }}">Ajouter Organisation</a>
                 </div>
     </div>
 </div>
